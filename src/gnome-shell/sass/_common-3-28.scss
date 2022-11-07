@@ -1133,7 +1133,7 @@ $submenu_item_radius: $popup_radius - $container_padding;
   color: $fg_color;
   background-color: $base_color;
   border: none;
-  box-shadow: $shadow_2;
+  box-shadow: none; /*$shadow_2;*/
   border-radius: $buttons_radius;
   padding: 12px;
 }

@@ -2,6 +2,7 @@
 /***************
  * Base States *
  ***************/
+
 .background {
   background-color: $background;
   color: $text;
@@ -2015,7 +2016,7 @@ scrollbar {
   $_slider_min_length: 24px;
 
   transition: $transition;
-  background-color: $base;
+  background-color: transparent;
 
   // scrollbar border
   &.top { border-bottom: 1px solid $divider; }

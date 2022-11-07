@@ -1,5 +1,5 @@
 .quick-settings {
-  padding: $container_padding * 3 !important;
+  padding: $container_padding *8 $container_padding *4  !important;
   border-radius: 20px + $container_padding * 3 !important;
   margin-top: $container_padding / 2 !important;
   border: none;
@@ -10,15 +10,15 @@
 }
 
 .quick-settings-grid {
-  spacing-rows: $container_padding * 2;
-  spacing-columns: $container_padding * 2;
+  spacing-rows: $container_padding * 3;
+  spacing-columns: $container_padding * 3;
 }
 
 .quick-toggle {
   border-radius: $circular_radius;
-  min-width: 12em;
-  max-width: 12em;
-  min-height: $container_padding * 4 + 16px;
+  min-width: 14em;
+  max-width: 14em;
+  min-height: $container_padding * 8 + 16px;
   border: none;
   background-color: rgba($fg_color, 0.06) !important;
 
@@ -93,24 +93,25 @@
 }
 
 .quick-toggle-menu {
-  background-color: white !important;
-  color: rgba(black, 0.65) !important;
+
+  background-color: rgba($fg_color, 0.05) !important;
+  color: white !important;
   border-radius: $container_padding * 5 !important;
   padding: $container_padding * 2;
   margin: $container_padding * 2 $container_padding * 3.5 0;
 
   .popup-menu-item {
     border-radius: $circular_radius !important;
-    color: rgba(black, 0.65) !important;
+    color:rgba(white, 0.75) !important;
 
     &:focus, &:hover, &.selected {
-      color: rgba(black, 0.75) !important;
-      background-color: rgba(black, 0.1) !important;
+      color: rgba(white, 1) !important;
+      background-color: rgba(white, 0.1) !important;
     }
 
     &:active {
-      color: rgba(black, 0.75) !important;
-      background-color: rgba(black, 0.2) !important;
+      color: rgba(white, 1) !important;
+      background-color: rgba(white, 0.2) !important;
     }
 
     > StIcon { -st-icon-style: symbolic; }
@@ -126,7 +127,7 @@
     }
 
     .popup-separator-menu-item-separator {
-      background-color: rgba(black, 0.1) !important;
+      background-color: rgba(white, 0.1) !important;
     }
 
     @if $variant == 'dark' {

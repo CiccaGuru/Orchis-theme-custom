@@ -2,10 +2,13 @@
 //
 // Nautilus
 //
+$topbar: 'dark';
+
+
 .nautilus-window {
   &.background.csd {
+
     background-image: none;
-    background-color: if($topbar == 'dark' and $variant == 'light', $titlebar, $base);
     color: if($topbar == 'dark' and $variant == 'light', $titlebar-text-secondary, $text-secondary);
   }
 
@@ -19,6 +22,9 @@
     min-width: 0;
   }
 
+  flap.unfolded{
+    background:$titlebar;
+  }
   flap.unfolded > placessidebar {
     background-color: transparent;
     border-radius: $window-radius;
@@ -27,7 +33,6 @@
     > scrolledwindow {
       margin: 0 0 $space-size * 2 $space-size * 2;
       border-radius: $window-radius - $space-size;
-      background-color: if($topbar == 'dark' and $variant == 'light', transparent, rgba($primary, 0.08));
 
       overshoot {
         &.top { border-radius: $window-radius - $space-size $window-radius - $space-size 0 0; }
@@ -37,8 +42,7 @@
       > viewport {
         > list.navigation-sidebar {
           padding: 16px 0 16px 0;
-          background: none;
-          border-radius: $window-radius - $space-size;
+          background: $titlebar;
 
           > separator { background: none; }
 
@@ -52,6 +56,7 @@
               padding-left: 12px;
               padding-right: 0;
 
+              margin-left: $space-size;
               > box {
                 padding-right: 12px + $space-size;
                 padding-left: 0;
@@ -65,20 +70,29 @@
             }
 
             &, image.sidebar-icon, label.sidebar-label {
-              color: $titlebar-text-secondary;
+              color: rgba(white, 0.95);
+              opacity: 1;
             }
 
             image.sidebar-icon {
-              padding-right: $space-size;
+              padding: $space-size;
+              margin-top: $space-size*2;
+              margin-bottom: $space-size*2;
+              margin-right: $space-size*2;
+              margin-left: -$space-size*2;
+              border-radius: 50%;
+              color: white !important;
             }
 
             label.sidebar-label {
-              color: inherit;
+              color: rgba(white, 0.9);
               min-height: 54px;
               padding-left: $space-size;
             }
 
-            &.sidebar-placeholder-row { background-color: transparent; }
+            &.sidebar-placeholder-row {
+              background-color: transparent;
+            }
 
             &:drop(active) {
               border-radius: 0;
@@ -99,17 +113,29 @@
             }
 
             &:hover {
-              image.sidebar-icon, label.sidebar-label { color: $primary; }
+              image.sidebar-icon{
+                color: white;
+                background-color: $primary;
+              }
+
+              label.sidebar-label {
+                color: white;
+                font-weight: 700; }
             }
 
             &:selected {
               background-color: transparent;
               font-weight: 700;
-              // font-size: larger;
 
-              image.sidebar-icon { color: $primary; }
+              image.sidebar-icon {
+                color: $white;
+                opacity: 1;
+                background-color: $primary;
+              }
 
-              image.sidebar-icon, label.sidebar-label { color: $primary; }
+              label.sidebar-label {
+                color: $primary;
+              }
 
               button.sidebar-button {
                 color: $primary;
@@ -123,8 +149,8 @@
                 border-image-width: 10px 10px 10px 46px;
                 border-image-slice: 10 10 10 46;
                 border-image-repeat: stretch;
-                border-image-source: -gtk-scaled(url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}.png"),
-                                                 url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}@2.png"));
+                border-image-source: -gtk-scaled(url("assets/row-selected.png"),
+                                                 url("assets/row-selected@2.png"));
               }
 
               label.sidebar-label {
@@ -133,6 +159,7 @@
 
               button.sidebar-button {
                 color: $primary;
+                opacity: 1;
 
                 @extend %button-flat-simple;
               }
