@@ -50,7 +50,7 @@
     @if ($theme == 'default') { @return #1A73E8; }
     @if ($theme == 'purple') { @return $purple-400; }
     @if ($theme == 'pink') { @return $pink-400; }
-    @if ($theme == 'red') { @return $red-600; }
+    @if ($theme == 'red') { @return $red-700; }
     @if ($theme == 'orange') { @return $orange-700; }
     @if ($theme == 'yellow') { @return $yellow-700; }
     @if ($theme == 'green') { @return $green-500; }
@@ -60,7 +60,7 @@
     @if ($theme == 'default') { @return #3281EA; }
     @if ($theme == 'purple') { @return $purple-300; }
     @if ($theme == 'pink') { @return $pink-300; }
-    @if ($theme == 'red') { @return $red-500; }
+    @if ($theme == 'red') { @return $red-700; }
     @if ($theme == 'orange') { @return $orange-600; }
     @if ($theme == 'yellow') { @return $yellow-a700; }
     @if ($theme == 'green') { @return $green-400; }
