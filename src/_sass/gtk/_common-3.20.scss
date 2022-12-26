@@ -169,7 +169,7 @@ textview {
 }
 
 iconview {
-  &:hover, &:selected { border-radius: $corner-radius; }
+  border-radius: $corner-radius;
 }
 
 .rubberband,
@@ -652,8 +652,6 @@ button {
 
         &:checked { background-color: rgba($b_color, 0.3); }
       }
-
-      .osd & { }
     }
   }
 
@@ -694,9 +692,9 @@ button {
 
   // inline-toolbar buttons
   .inline-toolbar & {
-    // @extend %button-flat;
+    @extend %button-flat;
 
-    &:not(.text-button) { @extend %circular-button; }
+    &.image-button { @extend %circular-button; }
   }
 
   .primary-toolbar & { -gtk-icon-shadow: none; } // tango icons don't need shadows
@@ -988,7 +986,7 @@ button.combo:only-child {
  ************/
 toolbar {
   -GtkWidget-window-dragging: true;
-  padding: 2px;
+  padding: $space-size / 2;
   background-color: $background;
 
   button { @extend %button-flat; }
@@ -1030,7 +1028,10 @@ toolbar {
     scale,
     entry,
     spinbutton,
-    button { margin: 2px; }
+    button,
+    stackswitcher {
+      margin: 2px;
+    }
 
     .linked entry,
     .linked spinbutton,
@@ -1055,6 +1056,10 @@ toolbar {
   border-width: 0 1px 1px;
   border-color: $divider;
   background-color: $base-alt;
+
+  frame.view + & {
+    border-radius: 0 0 $corner-radius $corner-radius;
+  }
 }
 
 searchbar > revealer > box,
@@ -1200,6 +1205,7 @@ searchbar > revealer > box {
 
   stackswitcher { // reset
     border-radius: $circular-radius;
+    margin: $space-size 0;
 
     &.linked:not(.vertical) > button:not(.suggested-action):not(.destructive-action).text-button {
       border-radius: $circular-radius;
@@ -1287,10 +1293,15 @@ searchbar > revealer > box {
   }
 
   &.default-decoration {
-    min-height: 24px;
-    padding: $space-size $space-size / 2;
+    min-height: $small-size;
     box-shadow: inset 0 1px highlight($titlebar);
     border-radius: $corner-radius $corner-radius 0 0;
+
+    @if $mac_style == 'true' {
+      padding: $space-size $space-size * 2;
+    } @else {
+      padding: $space-size $space-size / 2;
+    }
 
     .tiled &,
     .maximized &,
@@ -1300,10 +1311,17 @@ searchbar > revealer > box {
     }
 
     button.titlebutton {
-      min-height: 24px;
-      min-width: 24px;
-      margin: 0 $space-size / 2;
       padding: 0;
+
+      @if $mac_style == 'true' {
+        min-height: 16px;
+        min-width: 16px;
+        margin: 0 $space-size - 2px;
+      } @else {
+        min-height: $small-size;
+        min-width: $small-size;
+        margin: 0 $space-size / 2;
+      }
     }
 
     // workaround for non-animatable buttons
@@ -1404,6 +1422,88 @@ headerbar {
   }
 }
 
+//
+// Window buttons
+//
+
+%mac_window_button {
+  min-height: 16px;
+  min-width: 16px;
+  padding: 0;
+  margin: 0 $space-size - 2px;
+
+  &.minimize, &.maximize, &.close {
+    color: transparent;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    &:active {
+      box-shadow: inset 0 0 0 9999px rgba(black, if($topbar == 'dark', 0.12, 0));
+      background-image: radial-gradient(circle, rgba(black, 0.12) 10%, transparent 0%);
+    }
+
+    &:hover, &:active {
+      color: white;
+    }
+
+    &:backdrop {
+      color: transparent;
+      background-color: $titlebar-track;
+
+      &:hover, &:active {
+        color: $titlebar-text-disabled;
+      }
+    }
+  }
+
+  &.minimize { // Window minimize button
+    background-color: $titlebutton-min;
+
+    &:active {
+      background-color: mix($titlebar-text, $titlebutton-min, 25%);
+    }
+  }
+
+  &.maximize { // Window maximize button
+    background-color: $titlebutton-max;
+
+    &:active {
+      background-color: mix($titlebar-text, $titlebutton-max, 25%);
+    }
+  }
+
+  &.close { // Window close button
+    background-color: $titlebutton-close;
+
+    &:active {
+      background-color: mix($titlebar-text, $titlebutton-close, 25%);
+    }
+  }
+}
+
+headerbar {
+  @if $mac_style == 'true' {
+    > box.left,
+    > box.right {
+      padding: 0 $space-size;
+
+      > separator.titlebutton {
+        background-color: transparent;
+      }
+    }
+  }
+
+  button.titlebutton {
+    @extend %circular-button;
+
+    @if $mac_style == 'true' {
+      @extend %mac_window_button;
+    }
+  }
+}
+
 
 /************
  * Pathbars *
@@ -1461,6 +1561,7 @@ treeview.view {
 
   border-left-color: $track; // this is actually the tree lines color,
   border-top-color: $divider; // while this is the grid lines color, better then nothing
+  -gtk-outline-radius: 3px;
 
   // FIXME: Avoid transparency background-color being slightly darker
   &:selected {
@@ -1790,14 +1891,11 @@ popover.background {
   min-height: $small-size;
   min-width: $small-size;
   padding: $space-size 12px;
-
   border-width: 1px;
   border-color: transparent;
   border-style: solid;
-
   outline: none;
   background-clip: padding-box;
-
   color: $text-secondary;
   font-weight: 500;
 
@@ -1835,12 +1933,7 @@ notebook {
     }
 
     > stack {
-      scrolledwindow.frame {
-        border: none;
-      }
-
       .inline-toolbar {
-        border-width: 1px 0 0;
         border-radius: 0 0 $corner-radius / 2 $corner-radius / 2;
       }
     }
@@ -1852,6 +1945,10 @@ notebook {
     }
 
     > stack {
+      scrolledwindow.frame {
+        border-radius: $corner-radius $corner-radius 0 0;
+      }
+
       .inline-toolbar {
         border-radius: 0 0 $corner-radius $corner-radius;
       }
@@ -2848,7 +2945,6 @@ printdialog {
   box-shadow: none;
 }
 
-frame > border,
 .frame {
   @extend %frame;
 
@@ -2858,9 +2954,10 @@ frame > border,
 }
 
 frame {
-  // & > border { @extend %frame; }
+  & > border { @extend %frame; }
 
   &.flat > border,
+  > border.flat,
   statusbar & > border { border: none; } // for backward compatibility
 }
 
@@ -2944,6 +3041,41 @@ separator {
 /*********
  * Lists *
  *********/
+
+%circular_list {
+  border-radius: $corner-radius + 1px;
+  box-shadow: none;
+  border: 1px solid $divider;
+}
+
+%circular_row {
+  &:first-child {
+    border-top-left-radius: $corner-radius;
+    border-top-right-radius: $corner-radius;
+  }
+
+  &:last-child { // Not use ?
+    border-bottom-left-radius: $corner-radius;
+    border-bottom-right-radius: $corner-radius;
+  }
+
+  &:only-child {
+    border-radius: $corner-radius;
+  }
+}
+
+%sidebar_row {
+  margin-right: 4px;
+  border-radius: 0 $circular-radius $circular-radius 0;
+
+  &:selected {
+    background-color: $overlay-checked;
+    color: $primary;
+
+    image, label { color: $primary; }
+  }
+}
+
 list {
   border-color: $divider;
   background-color: $base;
@@ -3729,12 +3861,7 @@ decoration {
   }
 }
 
-// Window Close button
-button.titlebutton {
-  @extend %circular-button;
-}
-
-.monospace { font-family: monospace; }
+// .monospace { font-family: monospace; }
 
 
 /**********************
@@ -3785,7 +3912,6 @@ cursor-handle {
 stackswitcher {
   min-height: 0;
   padding: 0;
-  margin: $space-size 0;
   border-radius: $circular-radius;
   background-color: $overlay-normal;
 

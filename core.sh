@@ -129,13 +129,13 @@ install() {
   mkdir -p                                                                      "$THEME_DIR/cinnamon"
   cp -r "$SRC_DIR/cinnamon/common-assets"                                       "$THEME_DIR/cinnamon/assets"
   cp -r "$SRC_DIR/cinnamon/assets${ELSE_DARK:-}/"*.svg                          "$THEME_DIR/cinnamon/assets"
+  cp -r "$SRC_DIR/cinnamon/theme$theme/add-workspace-active${ELSE_DARK:-}.svg"  "$THEME_DIR/cinnamon/assets/add-workspace-active.svg"
+  cp -r "$SRC_DIR/cinnamon/theme$theme/corner-ripple${ELSE_DARK:-}.svg"         "$THEME_DIR/cinnamon/assets/corner-ripple.svg"
+  cp -r "$SRC_DIR/cinnamon/theme$theme/toggle-on${ELSE_DARK:-}.svg"             "$THEME_DIR/cinnamon/assets/toggle-on.svg"
 
-  if [[ "$theme" != '' ]]; then
-    cp -r "$SRC_DIR/cinnamon/theme$theme/add-workspace-active${ELSE_DARK:-}.svg" "$THEME_DIR/cinnamon/assets/add-workspace-active.svg"
-    cp -r "$SRC_DIR/cinnamon/theme$theme/checkbox${ELSE_DARK:-}.svg"            "$THEME_DIR/cinnamon/assets/checkbox.svg"
+  if [[ "$primary" == 'true' ]]; then
+    cp -r "$SRC_DIR/cinnamon/theme$theme/checkbox${ELSE_DARK:-}.svg"            "$THEME_DIR/gnome-shell/assets/checkbox.svg"
     cp -r "$SRC_DIR/cinnamon/theme$theme/radiobutton${ELSE_DARK:-}.svg"         "$THEME_DIR/cinnamon/assets/radiobutton.svg"
-    cp -r "$SRC_DIR/cinnamon/theme$theme/corner-ripple${ELSE_DARK:-}.svg"       "$THEME_DIR/cinnamon/assets/corner-ripple.svg"
-    cp -r "$SRC_DIR/cinnamon/theme$theme/toggle-on${ELSE_DARK:-}.svg"           "$THEME_DIR/cinnamon/assets/toggle-on.svg"
   fi
 
   if [[ "$tweaks" == 'true' ]]; then
@@ -232,30 +232,29 @@ tweaks_temp() {
 
 change_radio_color() {
   sed -i "/\$check_radio:/s/default/primary/" ${SRC_DIR}/_sass/_tweaks-temp.scss
-  echo "Change radio color ..."
 }
 
 install_compact_panel() {
   sed -i "/\$panel_style:/s/float/compact/" ${SRC_DIR}/gnome-shell/sass/_tweaks-temp.scss
-  echo -e "Install compact panel version ..."
 }
 
 install_solid() {
   sed -i "/\$opacity:/s/default/solid/" ${SRC_DIR}/gnome-shell/sass/_tweaks-temp.scss
   sed -i "/\$opacity:/s/default/solid/" ${SRC_DIR}/_sass/_tweaks-temp.scss
-  echo -e "Install solid version ..."
 }
 
 install_black() {
   sed -i "/\$blackness:/s/false/true/" ${SRC_DIR}/gnome-shell/sass/_tweaks-temp.scss
   sed -i "/\$blackness:/s/false/true/" ${SRC_DIR}/_sass/_tweaks-temp.scss
-  echo -e "Install black version ..."
+}
+
+install_mac() {
+  sed -i "/\$mac_style:/s/false/true/" ${SRC_DIR}/_sass/_tweaks-temp.scss
 }
 
 round_corner() {
   sed -i "/\$default_corner:/s/12px/${corner}/" ${SRC_DIR}/gnome-shell/sass/_tweaks-temp.scss
   sed -i "/\$default_corner:/s/12px/${corner}/" ${SRC_DIR}/_sass/_tweaks-temp.scss
-  echo -e "Change round corner ${corner} value ..."
 }
 
 install_theme_color() {
@@ -294,7 +293,7 @@ install_theme_color() {
 theme_tweaks() {
   install_package; tweaks_temp
 
-  if [[ "$panel" == "compact" || "$opacity" == 'solid' || "$blackness" == "true" || "$accent" == "true" || "$primary" == "true" || "$round" == "true" ]]; then
+  if [[ "$panel" == "compact" || "$opacity" == 'solid' || "$blackness" == "true" || "$accent" == "true" || "$primary" == "true" || "$round" == "true" || "$macstyle" == "true" ]]; then
     tweaks='true'
   fi
 
@@ -316,6 +315,10 @@ theme_tweaks() {
 
   if [[ "$round" == "true" ]] ; then
     round_corner
+  fi
+
+  if [[ "$macstyle" == "true" ]] ; then
+    install_mac
   fi
 }
 

@@ -392,7 +392,7 @@ window.background:not(.solid-csd):not(.csd) {
 
 window.background:not(.solid-csd):not(.csd) {
   // for 'Notebookbar' toolbar
-  > notebook {
+  > notebook:not(.frame) {
     border: none; // unset borders
     background-color: $base;
     box-shadow: none;
@@ -417,6 +417,160 @@ window.background:not(.solid-csd):not(.csd) {
     &:selected, &:hover {
       background-image: image($primary);
       &, label { color: on($primary); }
+    }
+  }
+}
+
+//
+// Cinnamon setting
+//
+
+stack > scrolledwindow > viewport > box {
+  > box > box,
+  > stack > box > revealer > box > box,
+  > stack > box > stack > box > box,
+  > revealer > box > stack > box > box {
+    > frame.view {
+      &, > border {
+        border-radius: $corner-radius;
+      }
+
+      > box > box {
+        > list {
+          background-color: transparent;
+        }
+
+        &:first-child > list {
+          &, > row {
+            border-radius: $corner-radius $corner-radius 0 0;
+          }
+        }
+
+        &:last-child > list {
+          &, > row {
+            border-radius: 0 0 $corner-radius $corner-radius;
+          }
+        }
+
+        &:only-child > list {
+          &, > row {
+            border-radius: $corner-radius;
+          }
+        }
+      }
+    }
+  }
+
+  > box > box,
+  > stack > box > box,
+  > box > revealer > box > box {
+    > frame.view {
+      &, > border {
+        border-radius: $corner-radius;
+      }
+
+      > box > box {
+        > list {
+          background-color: transparent;
+        }
+
+        &:first-child > list {
+          &, > row {
+            border-radius: $corner-radius $corner-radius 0 0;
+          }
+        }
+
+        &:last-child > list {
+          &, > row {
+            border-radius: 0 0 $corner-radius $corner-radius;
+          }
+        }
+
+        &:only-child > list {
+          &, > row {
+            border-radius: $corner-radius;
+          }
+        }
+      }
+
+      > box > revealer {
+        > box > box > list {
+          background-color: transparent;
+        }
+
+        &:first-child > box > box > list {
+          &, > row {
+            border-radius: $corner-radius $corner-radius 0 0;
+          }
+        }
+
+        &:last-child > box > box > list {
+          &, > row {
+            border-radius: 0 0 $corner-radius $corner-radius;
+          }
+        }
+      }
+    }
+  }
+
+  > box > widget > overlay > scrolledwindow > viewport > grid > box {
+    > frame {
+      &, > border {
+        border-radius: $corner-radius;
+      }
+
+      > list {
+        border-radius: $corner-radius;
+
+        > row {
+          &:first-child {
+            border-radius: $corner-radius $corner-radius 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 $corner-radius $corner-radius;
+          }
+        }
+      }
+    }
+  }
+
+  > stack > box > box > frame.view {
+    &, > border {
+      border-radius: $corner-radius;
+    }
+
+    frame.view {
+      background-color: transparent;
+    }
+
+    > box > scrolledwindow > viewport.frame > box {
+      > list {
+        border-radius: $corner-radius;
+
+        > row {
+          &:first-child {
+            border-radius: $corner-radius $corner-radius 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 $corner-radius $corner-radius;
+          }
+        }
+      }
+    }
+  }
+
+  > widget > box > frame.view {
+    &, > border,
+    > widget > box > box > list {
+      border-radius: $corner-radius;
+    }
+  }
+
+  #c_box {
+    notebook {
+      background-color: transparent;
     }
   }
 }
