@@ -253,7 +253,7 @@
 // Dash to Panel
 //
 
-$dash_to_panel_item_radius: 5px;
+$dash_to_panel_item_radius: 9999px;
 
 .dashtopanelMainPanel {
   border-radius: 0 !important;
@@ -275,7 +275,7 @@ $dash_to_panel_item_radius: 5px;
   .panel-button {
     &, &.clock-display .clock {
       border-radius: $dash_to_panel_item_radius + $space-size / 2 !important;
-      margin: 0 !important;
+      margin: 0px !important;
     }
   }
 

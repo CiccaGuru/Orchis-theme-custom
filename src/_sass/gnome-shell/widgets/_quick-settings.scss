@@ -1,5 +1,5 @@
 .quick-settings {
-  padding: $space-size * 3 !important;
+  padding: $space-size * 8 $space-size*4 !important;
   border-radius: 20px + $space-size * 3 !important;
   margin-top: $space-size / 2 !important;
   border: none;
@@ -16,9 +16,9 @@
 
 .quick-toggle {
   border-radius: $circular-radius;
-  min-width: 12em;
-  max-width: 12em;
-  min-height: $space-size * 4 + 16px;
+  min-width: 14em;
+  max-width: 14em;
+  min-height: $space-size * 8 + 16px;
   border: none;
   background-color: rgba($text, 0.06) !important;
 
