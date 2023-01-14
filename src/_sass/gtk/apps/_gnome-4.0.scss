@@ -7,14 +7,17 @@ $topbar: 'dark';
 
 .nautilus-window {
   &.background.csd {
-
-    background-image: none;
     color: if($topbar == 'dark' and $variant == 'light', $titlebar-text-secondary, $text-secondary);
+
+    &, &:backdrop {
+      background-image: none;
+      background-color: if($topbar == 'dark' and $variant == 'light', $titlebar, $base);
+    }
   }
 
   headerbar {
-    background-color: if($topbar == 'dark' and $variant == 'light', $titlebar, $base);
-    box-shadow: inset 0 1px highlight($titlebar);
+    background-color: transparent;
+    box-shadow: none;
   }
 
   flap > separator {
@@ -498,6 +501,7 @@ carousel.card {
   min-height: 28px;
   min-width: 28px;
   padding: $space-size;
+  margin: $space-size;
 
   &.grey {
     color: $text;
@@ -511,8 +515,8 @@ carousel.card {
 
   &.blue,
   &.details-rating-5 {
-    color: $blue-500;
-    background-color: rgba($blue-500, 0.15);
+    color: $blue-dark;
+    background-color: rgba($blue-dark, 0.15);
   }
 
   &.yellow, &.details-rating-12 {
@@ -521,8 +525,8 @@ carousel.card {
   }
 
   &.details-rating-15 {
-    color: $orange-500;
-    background-color: rgba($orange-500, .15);
+    color: $orange-dark;
+    background-color: rgba($orange-dark, .15);
   }
 
   &.red, &.details-rating-18 {

@@ -1044,6 +1044,30 @@ searchbar > revealer > box {
  * Header bars *
  ***************/
 
+%flat-titlebar-button {
+  color: $text-secondary;
+
+  &:focus, &:hover, &:active, &:checked { color: $text; }
+
+  &:disabled { color: $text-secondary-disabled; }
+
+  &:checked:disabled { color: $text-disabled; }
+
+  &:backdrop {
+    color: $text-disabled;
+
+    &:focus, &:hover, &:active { color: $text-secondary; }
+
+    &:disabled { color: $text-secondary-disabled; }
+
+    &:checked {
+      color: $text-secondary;
+
+      &:disabled { color: $text-secondary-disabled; }
+    }
+  }
+}
+
 %titlebar-button {
   @extend %button-flat;
   color: $titlebar-text-secondary;
@@ -1131,16 +1155,6 @@ headerbar {
     &:disabled { color: $titlebar-text-secondary-disabled; }
   }
 
-  &.flat {
-    @if $topbar == 'dark' and $variant == 'light' {
-      box-shadow: none;
-    } @else {
-      box-shadow: none;
-
-      &, &:backdrop { background-color: transparent; }
-    }
-  }
-
   .title {
     padding: 0 $space-size * 2;
     font-weight: bold;
@@ -1205,6 +1219,23 @@ headerbar {
   }
 
   button.toggle { border-radius: $circular-radius; }
+
+  &.flat {
+    background-color: $background;
+    box-shadow: inset 0 1px highlight($background);
+    color: $text-secondary;
+    border-radius: $window-radius $window-radius 0 0;
+
+    button:not(.suggested-action):not(.destructive-action) {
+      @extend %flat-titlebar-button;
+    }
+  }
+
+  background.csd.info &.flat,
+  background.csd.about &.flat { // reset
+    background-color: transparent;
+    box-shadow: none;
+  }
 
   popover.background { // reset
     > contents {
@@ -1468,17 +1499,33 @@ $window-space: if($mac_style == 'true', $space-size * 1.5, $space-size);
 headerbar windowcontrols {
   border-spacing: $space-size;
 
-  &:not(.empty) {
-    &.start:dir(ltr),
-    &.end:dir(rtl) {
-      margin-right: $window-space;
-      margin-left: $window-space;
-    }
+  @if $mac_style == 'true' {
+    &:not(.empty) {
+      &.start:dir(ltr),
+      &.end:dir(rtl) {
+        margin-right: $window-space;
+        margin-left: $window-space;
+      }
 
-    &.start:dir(rtl),
-    &.end:dir(ltr) {
-      margin-left: $window-space;
-      margin-right: $window-space;
+      &.start:dir(rtl),
+      &.end:dir(ltr) {
+        margin-left: $window-space;
+        margin-right: $window-space;
+      }
+    }
+  } @else {
+    &:not(.empty) {
+      &.start:dir(ltr),
+      &.end:dir(rtl) {
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      &.start:dir(rtl),
+      &.end:dir(ltr) {
+        margin-left: 0;
+        margin-right: 0;
+      }
     }
   }
 
@@ -1488,7 +1535,7 @@ headerbar windowcontrols {
     @if $mac_style == 'true' {
       @extend %mac_window_button;
     } @else {
-      @extend %button-flat-simple;
+      // @extend %button-flat-simple;
 
       &, &:hover, &:active, &:backdrop {
         > image {
@@ -1846,6 +1893,9 @@ popover.background {
     }
 
     list {
+      background-color: transparent;
+      padding: 0;
+
       > row {
         padding: $space-size $space-size * 2;
       }
@@ -2048,7 +2098,7 @@ notebook {
       box-shadow: inset -1px 0 $solid-border;
 
       > tabs {
-        margin: 0 4px 0 0;
+        margin: 0 0 0 4px;
 
         > tab {
           border-radius: $corner-radius 0 0 $corner-radius;
@@ -2061,7 +2111,7 @@ notebook {
       box-shadow: inset 1px 0 $solid-border;
 
       > tabs {
-        margin: 0 0 0 4px;
+        margin: 0 4px 0 0;
 
         > tab {
           border-radius: 0 $corner-radius $corner-radius 0;
@@ -3594,6 +3644,39 @@ window.dialog.message { // Message Dialog styling
   }
 }
 
+window.messagedialog {
+  .message-area {
+    separator {
+      background-color: transparent;
+      min-height: 0;
+    }
+  }
+
+  .response-area {
+    padding: $space-size;
+    box-shadow: none;
+    border: none;
+
+    button {
+      @extend %button-flat;
+      border: none;
+      box-shadow: none;
+      border-radius: $circular-radius;
+
+      &:not(:last-child) { margin-right: $space-size; }
+
+      &.suggested:not(:disabled) { color: $suggested; }
+
+      &.destructive:not(:disabled) { color: $destructive; }
+    }
+
+    separator {
+      background-color: transparent;
+      min-width: 0;
+    }
+  }
+}
+
 filechooser {
   .dialog-action-box { border-top: 1px solid $divider; }
 
@@ -3633,6 +3716,16 @@ window.aboutdialog {
 
   .large-icons {
     -gtk-icon-size: 128px;
+  }
+}
+
+window.about.background.csd {
+  headerbar {
+    color: $text-secondary;
+
+    button:not(.suggested-action):not(.destructive-action) {
+      @extend %flat-titlebar-button;
+    }
   }
 }
 
@@ -4152,6 +4245,10 @@ window {
 
   &.csd {
     border-radius: $window-radius;
+    box-shadow: $shadow-z16,
+                0 16px (24px * .6) 2px transparent,
+                0 6px (30px * .6) 5px transparent,
+                inset 0 1px highlight($titlebar);
 
     &.maximized,
     &.fullscreen,
@@ -4163,10 +4260,6 @@ window {
 
     @if $topbar == 'dark' {
       &.background {
-        box-shadow: $shadow-z16,
-                    0 16px (24px * .6) 2px transparent,
-                    0 6px (30px * .6) 5px transparent,
-                    inset 0 1px highlight($titlebar);
         background-color: transparent;
         background-image: linear-gradient(to bottom,
                                           $titlebar,
@@ -4174,10 +4267,6 @@ window {
                                           $background $large-size,
                                           $background);
       }
-    } @else {
-      box-shadow: $shadow-z16,
-                  0 16px (24px * .6) 2px transparent,
-                  0 6px (30px * .6) 5px transparent;
     }
 
     &:backdrop {
@@ -4186,13 +4275,13 @@ window {
       // The biggest shadow should be in the same order then in the active state
       // or the jumping will happen during the transition.
       transition: $transition-shadow;
+      box-shadow: $shadow-z4,
+                  0 16px (24px * .6) 2px transparent,
+                  0 6px (30px * .6) 5px transparent,
+                  inset 0 1px highlight($titlebar);
 
       @if $topbar == 'dark' {
         &.background {
-          box-shadow: $shadow-z4,
-                      0 16px (24px * .6) 2px transparent,
-                      0 6px (30px * .6) 5px transparent,
-                      inset 0 1px highlight($titlebar);
           background-color: transparent;
           background-image: linear-gradient(to bottom,
                                             $titlebar-backdrop,
@@ -4200,10 +4289,33 @@ window {
                                             $background $large-size,
                                             $background);
         }
-      } @else {
+      }
+    }
+
+    &.messagedialog {
+      background-color: $surface;
+      background-image: none;
+      box-shadow: $shadow-z16,
+                  0 16px (24px * .6) 2px transparent,
+                  0 6px (30px * .6) 5px transparent,
+                  inset 0 1px highlight($titlebar);
+
+      &:backdrop {
+        background-color: $background;
+        background-image: none;
         box-shadow: $shadow-z4,
                     0 16px (24px * .6) 2px transparent,
-                    0 6px (30px * .6) 5px transparent;
+                    0 6px (30px * .6) 5px transparent,
+                    inset 0 1px highlight($titlebar);
+      }
+    }
+
+    &.about, &.info {
+      @if $topbar == 'dark' {
+        &.background, &.background:backdrop {
+          background-color: $background;
+          background-image: none;
+        }
       }
     }
   }
