@@ -8,35 +8,13 @@
 // this transparent..
 .budgie-container { background-color: transparent; }
 
-// Budgie setting
-.budgie-settings-window {
-  > box > scrolledwindow {
-    background-color: $base-alt;
-    border-bottom-left-radius: $window-radius;
-
-    list.sidebar {
-      background-color: transparent;
-    }
-  }
-
-  buttonbox.inline-toolbar {
-    border-style: none none solid;
-
-    button {
-      border-radius: $corner-radius;
-
-      @extend %button-flat-simple;
-    }
-  }
-}
-
 // Budgie popover
 .budgie-popover {
   border: none;
   border-radius: $corner-radius;
   box-shadow: $shadow-z3;
-  background-color: $surface;
-  border-color: $surface;
+  background-color: $base;
+  border-color: $base;
 
   .container { padding: $space-size; }
 
@@ -46,6 +24,33 @@
 
   list { background-color: transparent; }
 
+  entry, button, spinbutton, button.combo {
+    border-radius: $menuitem-radius;
+  }
+
+  .linked > entry,
+  .linked > button {
+    &:first-child {
+      border-top-left-radius: $menuitem-radius;
+      border-bottom-left-radius: $menuitem-radius;
+    }
+
+    &:last-child {
+      border-top-right-radius: $menuitem-radius;
+      border-bottom-right-radius: $menuitem-radius;
+    }
+  }
+
+  button.flat:not(.image-button) {
+    min-height: $menuitem-size;
+    padding: 0 8px;
+    color: $text;
+    font-weight: normal;
+    border-radius: $menuitem-radius;
+
+    &:disabled { color: $text-disabled; }
+  }
+
   row {
     padding: 0;
 
@@ -53,14 +58,18 @@
 
     button {
       @extend %button-flat-simple;
-      border-radius: $corner-radius - $space-size;
+      border-radius: $menuitem-radius;
     }
   }
 
-  calendar:not(.header) { border-radius: $corner-radius - $space-size; }
+  calendar:not(.header) { border-radius: $menuitem-radius; }
 
   scrolledwindow.sidebar.categories { // AppMenu
     background-color: $fill;
+
+    button.category-button {
+      border-radius: 0;
+    }
   }
 
   treeview.view.sidebar { //AppMenu (Elementary) old version
@@ -108,18 +117,6 @@
     }
   }
 
-  button { border-radius: $corner-radius - $space-size; }
-
-  button.flat:not(.image-button) {
-    min-height: $menuitem-size;
-    padding: 0 8px;
-    color: $text;
-    font-weight: normal;
-    border-radius: $corner-radius - $space-size;
-
-    &:disabled { color: $text-disabled; }
-  }
-
   &.budgie-menu {
     .container { padding: 0; }
 
@@ -135,7 +132,7 @@
       font-size: 120%;
     }
 
-    button.flat:not(.image-button):not(.indicator-item) {
+    row.activatable > button.flat {
       @extend %row_activatable;
       min-height: 32px;
       padding: 0 8px;
@@ -144,6 +141,46 @@
       &:checked { @extend %selected_items; }
 
       &:checked:disabled { background-color: transparent; } // remove pointless indicator
+    }
+
+    list.left-overlay-menu {
+      box-shadow: $shadow-z4, inset 0 1px highlight($base);
+      background-color: $base;
+      padding: $space-size;
+      margin: $space-size;
+      border-radius: $menu-radius;
+
+      > row.activatable {
+        border-radius: $menuitem-radius;
+
+        &:not(:last-child) {
+          margin-bottom: $space-size / 2;
+        }
+
+        button.menuitem {
+          border-radius: $menuitem-radius;
+        }
+      }
+    }
+
+    .budgie-menu-footer {
+      border-top: 1px solid $border;
+      padding: $space-size;
+
+      button.flat {
+        min-height: 16px;
+        min-width: 16px;
+        padding: $space-size;
+        border-radius: $menuitem-radius;
+
+        &.image-button {
+          border-radius: $circular-radius;
+
+          &:not(.last-child) {
+            margin-right: $space-size;
+          }
+        }
+      }
     }
   }
 
@@ -166,16 +203,13 @@
       button.indicator-item {
         transition: none;
         animation: none;
-
-        &:hover {
-        }
       }
     }
   }
 
-  &.sound-popover {
-    // separator { margin: $space-size / 2 0; }
-  }
+  // &.sound-popover {
+  //   separator { margin: $space-size / 2 0; }
+  // }
 
   &.night-light-indicator {
     .container { padding: $space-size / 2; }
@@ -315,7 +349,7 @@
   color: on($panel, secondary);
   font-weight: 500;
 
-  &.transparent { background-color: $scrim; }
+  &.transparent { background-color: $panel; }
 
   .bottom & {
     &.dock-mode {
@@ -339,9 +373,9 @@
       border-radius: 0 $window-radius $window-radius 0;
 
       .icon-tasklist {
-        .launcher {
-          &:first-child { border-top-right-radius: $window-radius; }
-          &:last-child { border-bottom-right-radius: $window-radius; }
+        > box > revealer {
+          &:first-child > button.launcher { border-top-right-radius: $window-radius; }
+          &:last-child > button.launcher { border-bottom-right-radius: $window-radius; }
         }
       }
     }
@@ -352,9 +386,9 @@
       border-radius: $window-radius 0 0 $window-radius;
 
       .icon-tasklist {
-        .launcher {
-          &:first-child { border-top-left-radius: $window-radius; }
-          &:last-child { border-bottom-left-radius: $window-radius; }
+        > box > revealer {
+          &:first-child > button.launcher { border-top-left-radius: $window-radius; }
+          &:last-child > button.launcher { border-bottom-left-radius: $window-radius; }
         }
       }
     }
@@ -398,7 +432,7 @@
   separator { background-color: on($panel, track); }
 
   // used to indicate unread notifications
-  .alert { color: $destructive; }
+  .alert { color: $suggested; }
 
   // End Section needs to be fancy
   // .end-region { }
@@ -431,11 +465,15 @@
         color: on($panel);
       }
     }
+
+    separator {
+      background-color: $border;
+    }
   }
 
   // Tasklist
   #tasklist-button {
-    padding: 0 4px;
+    padding: 0 $space-size;
 
     @extend %underscores;
   }
@@ -470,6 +508,43 @@
                                         #{$b_wid};
         }
       }
+    }
+  }
+
+  .lock-keys {
+    image:disabled { color: on($panel, secondary-disabled); }
+  }
+
+  // Add padding for panel indicators icons
+  > box > widget > widget {
+    > image, // normal
+    > stack > image, // Screenshot
+    > box > image { // Places
+      margin-left: $space-size;
+      margin-right: $space-size;
+    }
+
+    > box > image + label { // Reset for mailneg
+      margin-left: -$space-size + 2px;
+    }
+
+    > box { // keyboard Layout
+      > widget > image { margin-left: $space-size; }
+      > stack > widget > label { margin-right: $space-size; }
+    }
+
+    > box > widget > widget > image { // Status
+      margin-left: $space-size / 2;
+      margin-right: $space-size / 2;
+    }
+  }
+
+  // Time label
+  .budgie-clock-applet,
+  .budgie-calendar-applet {
+    > widget > box {
+      padding-left: $space-size / 2;
+      padding-right: $space-size / 2;
     }
   }
 }
@@ -519,9 +594,13 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
   @if $panel_style == "float" {
     margin: 8px 6px 6px;
     border-radius: $corner-radius;
+
+    scrollbar {
+      background-color: transparent;
+    }
   }
 
-  > box { margin-bottom: -10px; } // remove extra space between box and .raven-header.bottom
+  // > box { margin-bottom: -10px; } // remove extra space between box and .raven-header.bottom
 
   stackswitcher.linked {
     margin: 6px 16px;
@@ -542,7 +621,7 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
       border-bottom: 1px solid $divider;
 
       stackswitcher button {
-        margin: -4px 0 -5px; // remove unwanted vertical margins
+        // margin: -4px 0 -5px; // remove unwanted vertical margins
         padding: 0 16px;
         min-height: $medium-size;
       }
@@ -583,18 +662,14 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
     scale.marks-after {
       padding-top: 0;
       padding-bottom: 0;
-
-      label {
-        font-size: 90%;
-        padding: 0;
-        margin: -10px 0 0 6px;
-      }
     }
 
     button.flat.expander-button {
       margin-top: 4px;
       margin-bottom: 4px;
     }
+
+    list { background: none; }
 
     list.devices-list.sound-devices {
       > row.activatable {
@@ -607,6 +682,12 @@ $pos_list: ((top, bottom), (bottom, top), (left, right), (right, left));
 
         label { padding-left: 12px; }
       }
+    }
+  }
+
+  levelbar {
+    &, trough, block {
+      border-radius: $circular-radius;
     }
   }
 }
@@ -627,7 +708,7 @@ calendar.raven-calendar {
 // MPRIS Applet
 .raven-mpris {
   background-color: $scrim;
-  color: on($scrim);
+  color: on($scrim, secondary);
 
   label { min-height: 24px; }
 
@@ -636,6 +717,12 @@ calendar.raven-calendar {
 
     @extend %button-on-dark;
   }
+}
+
+image.raven-mpris {
+  background-color: $divider;
+  color: $text-secondary;
+  border-radius: $corner-radius;
 }
 
 // notification list
@@ -675,65 +762,98 @@ calendar.raven-calendar {
   }
 }
 
-// Notifications
-.budgie-notification-window { background-color: transparent; }
-
-.budgie-notification {
-  .notification-title { font-size: 120%; }
-
-  .notification-body { color: $text-secondary; }
-}
-
-// On Screen Display in Budgie
-.budgie-osd-window {
-  @extend .budgie-notification-window;
-}
-
-// Internal part of the OSD
-.budgie-osd {
-  .budgie-osd-text { font-size: 120%; }
-}
-
-// Alt+tab switcher in Budgie
-.budgie-switcher-window {
-  @extend .budgie-notification-window;
-}
-
-// Internal part of the Switcher
-.budgie-switcher {
-  @extend .budgie-notification;
-}
-
-.budgie-panel {
-  .lock-keys {
-    image:disabled { color: on($panel, secondary-disabled); }
-  }
-}
-
 .drop-shadow {
   margin: 5px 9px;
-  padding: 3px;
+  padding: $space-size;
   border-radius: $window-radius;
   box-shadow: $shadow-z4, inset 0 1px highlight($surface);
   background-color: $surface;
 
   button { @extend %button-flat-simple; }
-
-  .linked > button { border-radius: $window-radius; }
 }
+
+// Notifications
+.budgie-notification-window {
+  background-color: transparent;
+
+  .linked > button {
+    &, &:first-child, &:last-child {
+      @extend %circular-button;
+    }
+  }
+}
+
+.budgie-notification {
+  padding: $space-size * 2;
+
+  .notification-title { font-size: 120%; }
+
+  .notification-body { color: $text-secondary; }
+}
+
+// Alt+tab switcher in Budgie
+.budgie-switcher-window {
+  background-color: transparent;
+}
+
+// Internal part of the Switcher
+.budgie-switcher {
+  padding: $space-size * 2;
+}
+
+.budgie-osd-window, // On Screen Display in Budgie
+.budgie-power-dialog { // Session window
+  background-color: transparent;
+  color: on($osd, secondary);
+
+  .drop-shadow {
+    box-shadow: $shadow-z4, inset 0 1px highlight($osd);
+    background-color: $osd;
+
+    button { @extend %button-on-dark; }
+  }
+}
+
+.budgie-osd-window {
+  image { color: on($osd, secondary); }
+
+  progressbar trough {
+    background-color: on($osd, track-disabled);
+  }
+}
+
+.budgie-power-dialog {
+  .titlebar, decoration {
+    background: none;
+    box-shadow: none;
+  }
+
+  .drop-shadow {
+    border-radius: $window-radius + $space-size;
+  }
+}
+
+// Internal part of the OSD
+// .budgie-osd {
+//   .budgie-osd-text { font-size: 120%; }
+// }
 
 %budgie_dialog {
   box-shadow: inset 0 1px highlight($surface);
   background-color: $surface;
+
+  > box > grid {
+    padding: $space-size * 4;
+  }
 }
 
-// Session Dialog
+// Dialogs
 .budgie-session-dialog,
 .budgie-polkit-dialog,
 .budgie-run-dialog {
   @extend %budgie_dialog;
 
-  &.background.csd, decoration { border-radius: $window-radius $window-radius $window-radius $window-radius; }
+  &.background.csd, decoration { border-radius: $window-radius; }
 
   label:not(:last-child),
   .dialog-title {
@@ -755,6 +875,10 @@ calendar.raven-calendar {
 .budgie-polkit-dialog {
   .message { color: $text-secondary; }
   .failure { color: $destructive; }
+
+  > box > grid {
+    padding-bottom: 0;
+  }
 }
 
 // Run Dialog
@@ -770,4 +894,40 @@ calendar.raven-calendar {
   list .dim-label { color: $text; }
 
   scrolledwindow { border-top: 1px solid $divider; }
+}
+
+//
+// Budgie desktop apps
+//
+
+// Budgie setting
+.budgie-settings-window {
+  > box > scrolledwindow {
+    background-color: $base-alt;
+    border-bottom-left-radius: $window-radius;
+
+    list.sidebar {
+      background-color: transparent;
+    }
+  }
+
+  buttonbox.inline-toolbar {
+    border-style: none none solid;
+
+    button {
+      border-radius: $corner-radius;
+
+      @extend %button-flat-simple;
+    }
+  }
+}
+
+button.centerbutton { // FIXME: not work
+  &:first-child {
+    border-radius: $corner-radius 0 0 $corner-radius;
+  }
+
+  &:last-child {
+    border-radius: 0 $corner-radius $corner-radius 0;
+  }
 }

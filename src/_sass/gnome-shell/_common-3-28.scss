@@ -86,12 +86,12 @@ StEntry {
   &:focus { @include entry(focus);}
   &:insensitive { @include entry(insensitive);}
   StIcon.capslock-warning {
-    icon-size: 16px;
+    icon-size:  $base-icon-size;
     warning-color: $warning;
     padding: 0 0;
   }
   StIcon.peek-password {
-    icon-size: 16px;
+    icon-size:  $base-icon-size;
     padding: 0 4px;
   }
   StLabel.hint-text {
@@ -938,7 +938,7 @@ $submenu_item_radius: $popup-radius - $space-size;
 }
 
 .system-switch-user-submenu-icon.default-icon {
-  icon-size: 16px;
+  icon-size:  $base-icon-size;
   padding: 0 4px;
 }
 
@@ -984,7 +984,7 @@ $submenu_item_radius: $popup-radius - $space-size;
   }
   &:active { background-color: $primary; color: white; }
 
-  & > StIcon { icon-size: 16px; }
+  & > StIcon { icon-size:  $base-icon-size; }
 }
 
 // Background menu
@@ -1132,7 +1132,7 @@ $submenu_item_radius: $popup-radius - $space-size;
   color: $text;
   background-color: $base;
   border: none;
-  box-shadow: $shell-shadow-z2;
+  box-shadow: $shell-shadow-z3;
   border-radius: $material-radius;
   padding: 12px;
 }
@@ -1601,6 +1601,7 @@ Gjs_ui_panel_ActivitiesButton.panel-button {
   }
 
   .events-list {
+    color: $text-secondary;
     spacing: 12px;
     text-shadow: none;
   }
@@ -1920,7 +1921,7 @@ Gjs_ui_panel_ActivitiesButton.panel-button {
 }
 
 .nm-dialog-icons { spacing: .5em; }
-.nm-dialog-icon { icon-size: 16px; }
+.nm-dialog-icon { icon-size:  $base-icon-size; }
 .no-networks-label { color: $text-disabled; }
 .no-networks-box { spacing: 12px; }
 
@@ -1945,7 +1946,7 @@ Gjs_ui_panel_ActivitiesButton.panel-button {
       selected-color: on(dark) !important;
     }
 
-    .search-entry-icon { icon-size: 16px; padding: 0 0; color: rgba(black, 0.75); }
+    .search-entry-icon { icon-size:  $base-icon-size; padding: 0 0; color: rgba(black, 0.75); }
 
     &:hover, &:focus {
       .search-entry-icon { color: rgba(black, 0.75); }
@@ -2091,10 +2092,10 @@ Gjs_ui_panel_ActivitiesButton.panel-button {
   -shell-grid-horizontal-item-size: 136px;
   -shell-grid-vertical-item-size: 136px;
 
-  row-spacing: $space-size * 6;
-  column-spacing: $space-size * 6;
-  max-row-spacing: $space-size * 12;
-  max-column-spacing: $space-size * 12;
+  row-spacing: 36px;
+  column-spacing: 36px;
+  max-row-spacing: 72px;
+  max-column-spacing: 72px;
 
   .overview-icon { icon-size: 96px; }
 }
@@ -2595,7 +2596,7 @@ StWidget.focused .app-well-app-running-dot {
 }
 
 .hotplug-resident-eject-icon {
-  icon-size: 16px;
+  icon-size:  $base-icon-size;
 }
 
 .hotplug-resident-eject-button {
@@ -2968,7 +2969,7 @@ $keyboard_active_bg_color: if($variant == 'light', darken($keyboard, 20%), light
 
 .screen-shield-background { //just the shadow, really
   background: black;
-  box-shadow: $shell-shadow-z5;
+  box-shadow: $shell-shadow-z6;
 }
 
 /* Screen Shield */
@@ -3050,7 +3051,7 @@ $keyboard_active_bg_color: if($variant == 'light', darken($keyboard, 20%), light
   padding: 6px;
   border: none;
   border-radius: $material-radius;
-  box-shadow: $shell-shadow-z4;
+  box-shadow: $shell-shadow-z5;
 
   & > #Toolbar {
     padding: 0 8px;
@@ -3155,5 +3156,5 @@ $keyboard_active_bg_color: if($variant == 'light', darken($keyboard, 20%), light
   border: none;
   border-radius: $material-radius;
   padding: 6px;
-  box-shadow: $shell-shadow-z4;
+  box-shadow: $shell-shadow-z5;
 }

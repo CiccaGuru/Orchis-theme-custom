@@ -8,7 +8,7 @@ ROOT_UID=0
 DEST_DIR=
 
 # Destination directory
-if [ "$UID" -eq "$ROOT_UID" ]; then
+if [[ "$UID" -eq "$ROOT_UID" ]]; then
   DEST_DIR="/usr/share/themes"
 else
   DEST_DIR="$HOME/.themes"
@@ -127,7 +127,13 @@ install() {
   fi
 
   mkdir -p                                                                      "$THEME_DIR/xfwm4"
-  cp -r "$SRC_DIR/xfwm4/assets${ELSE_LIGHT:-}$ctype/"*.png                      "$THEME_DIR/xfwm4"
+
+  if [[ "$macstyle" == "true" ]] ; then
+    cp -r "$SRC_DIR/xfwm4/assets${ELSE_LIGHT:-}$ctype-mac/"*.png                "$THEME_DIR/xfwm4"
+  else
+    cp -r "$SRC_DIR/xfwm4/assets${ELSE_LIGHT:-}$ctype/"*.png                    "$THEME_DIR/xfwm4"
+  fi
+
   cp -r "$SRC_DIR/xfwm4/themerc${ELSE_LIGHT:-}$ctype"                           "$THEME_DIR/xfwm4/themerc"
 
   mkdir -p                                                                      "$THEME_DIR/cinnamon"
@@ -359,10 +365,15 @@ check_shell() {
   elif [[ "$shell" == "42" ]]; then
     GS_VERSION="42-0"
     echo "Install for gnome-shell version = 42.0"
+  elif [[ "$shell" == "44" ]]; then
+    GS_VERSION="44-0"
+    echo "Install for gnome-shell version = 44.0"
   elif [[ "$(command -v gnome-shell)" ]]; then
     gnome-shell --version
     SHELL_VERSION="$(gnome-shell --version | cut -d ' ' -f 3 | cut -d . -f -1)"
-    if [[ "${SHELL_VERSION:-}" -ge "42" ]]; then
+    if [[ "${SHELL_VERSION:-}" -ge "44" ]]; then
+      GS_VERSION="44-0"
+    elif [[ "${SHELL_VERSION:-}" -ge "42" ]]; then
       GS_VERSION="42-0"
     elif [[ "${SHELL_VERSION:-}" -ge "40" ]]; then
       GS_VERSION="40-0"
@@ -371,7 +382,7 @@ check_shell() {
     fi
     else
       echo "'gnome-shell' not found, using styles for last gnome-shell version available."
-      GS_VERSION="42-0"
+      GS_VERSION="44-0"
   fi
 }
 
@@ -386,6 +397,14 @@ install_theme() {
       done
     done
   done
+
+  if (which xfce4-popup-whiskermenu 2> /dev/null); then
+    sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc"
+  fi
+
+  if (pgrep xfce4-session &> /dev/null); then
+    xfce4-panel -r
+  fi
 }
 
 uninstall_theme() {

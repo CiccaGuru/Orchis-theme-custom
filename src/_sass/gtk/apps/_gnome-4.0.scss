@@ -289,9 +289,9 @@ $topbar: 'dark';
   }
 
   .floating-bar {
-    min-height: $small-size;
-    padding: 2px;
-    margin: 6px;
+    min-height: $menuitem-size;
+    padding: $space-size / 2;
+    margin: $space-size;
     border: none;
     border-radius: $circular-radius;
     background-color: rgba($background, 0.95);
@@ -315,6 +315,7 @@ $topbar: 'dark';
 #NautilusQueryEditor { // search entry
   border-radius: $circular-radius;
   color: $titlebar-text-secondary;
+  padding: 0 ($medium-size - $menuitem-size) / 2 0 ($space-size + 2px);
 
   &:focus-within { color: $titlebar-text; }
 
@@ -323,7 +324,7 @@ $topbar: 'dark';
   > menubutton > button.image-button {
     min-width: $menuitem-size;
     min-height: $menuitem-size;
-    margin: 0;
+    margin: ($medium-size - $menuitem-size) / 2 0;
     padding: 0;
   }
 
@@ -790,4 +791,41 @@ window.dialog {
       }
     }
   }
+}
+
+//
+// Rnote
+//
+
+@function gtkcolor($c) {
+  @return unquote("@#{$c}");
+}
+
+button.colorpad {
+  padding: 0px;
+  margin: 0px;
+  background-blend-mode: screen;
+  background-image:
+      linear-gradient(45deg, #0f0f0f55 25%, transparent 25%, transparent 75%, #0f0f0f55 75%, #0f0f0f55),
+      linear-gradient(45deg, #0f0f0f55 25%, transparent 25%, transparent 75%, #0f0f0f55 75%, #0f0f0f55);
+  background-color: gtkcolor(colorpad_color);
+  color:  gtkcolor(colorpad_fg_color);
+  background-size: 18px 18px;
+  background-position: 0px 0px, 9px 9px;
+
+  &:hover {
+      filter: brightness(93%);
+  }
+
+  &:active {
+      filter: brightness(86%);
+  }
+
+  &:checked {
+      filter: brightness(100%);
+  }
+}
+
+window#desktopwindow {
+  background: none;
 }

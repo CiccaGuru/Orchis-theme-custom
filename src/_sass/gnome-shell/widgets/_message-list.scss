@@ -3,7 +3,7 @@
 
 // main list
 .message-list {
-  width: 31.5em;
+  width: 30em;
   padding: 0;
   color: $text-secondary;
   text-shadow: none;
@@ -14,7 +14,7 @@
   &:rtl { margin-right: 0; margin-left: 0; padding-left: 0; border-left-width: 0; }
 
   .message-list-placeholder {
-    spacing: $space-size * 2;
+    @extend %title_2;
     color: $text-secondary-disabled;
 
     // icon size and color
@@ -28,7 +28,12 @@
 
 .message-list-sections {
   spacing: $space-size;
-  margin: 0 $margin-size * 4 0 $margin-size * 2 + $space-size; // to account for scrollbar
+  margin: 0;
+  padding-bottom: $space-size;
+
+  // to account for scrollbar
+  &:ltr { margin-right: $margin-size; padding-left: $space-size; }
+  &:rtl { margin-left: $margin-size; padding-right: $space-size; }
 }
 
 .message-list-section,
@@ -74,8 +79,8 @@
 
     // fallback
     > .fallback-app-icon {
-      width: 16px;
-      height: 16px;
+      width: $base-icon-size;
+      height: $base-icon-size;
     }
   }
 
@@ -136,16 +141,17 @@
 
 /* Media Controls */
 .message-media-control {
-  margin: ($space-size * 2 + 10px) 4px;
-  padding: $space-size * 2;
+  margin: ($space-size * 2 + 12px) 4px !important;
+  padding: $space-size * 2 !important;
   border-radius: $circular-radius;
   color: $text-secondary;
+
   &:hover, &:focus { color: $text; background-color: $secondary-fill; }
   &:active { color: $text; background-color: $track; }
   &:insensitive { color: $text-secondary-disabled; }
 
-  &:last-child:ltr { margin-right: 16px; }
-  &:last-child:rtl { margin-left: 16px; }
+  &:last-child:ltr { margin-right: $base-icon-size !important; }
+  &:last-child:rtl { margin-left: $base-icon-size !important; }
 }
 
 // album-art
@@ -160,7 +166,7 @@
     padding: $space-size * 2;
     color: $text-disabled;
     border: none;
-    border-radius: $material-radius;
+    border-radius: $menuitem-radius;
     icon-size: 24px !important;
   }
 }

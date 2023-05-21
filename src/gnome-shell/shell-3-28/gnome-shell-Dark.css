@@ -1026,7 +1026,7 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   box-shadow: none;
 }
 
-.popup-menu .popup-menu-item:checked.selected {
+.popup-menu .popup-menu-item.selected:checked {
   background-color: #e5e5e5;
   color: rgba(0, 0, 0, 0.85);
 }
@@ -1036,7 +1036,7 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   color: rgba(0, 0, 0, 0.75);
 }
 
-.popup-menu .popup-menu-item:checked.selected:active {
+.popup-menu .popup-menu-item.selected:checked:active {
   background-color: #e0e0e0;
   color: rgba(0, 0, 0, 0.75);
 }
@@ -1102,7 +1102,7 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   margin-left: 9px;
   background-color: #3C3C3C;
   border-radius: 10px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .popup-separator-menu-item {
@@ -1345,7 +1345,7 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   color: white;
   background-color: #2C2C2C;
   border: none;
-  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   padding: 12px;
 }
@@ -1857,6 +1857,7 @@ Gjs_ui_panel_ActivitiesButton.panel-button:active, Gjs_ui_panel_ActivitiesButton
 }
 
 .events-button .events-list {
+  color: rgba(255, 255, 255, 0.7);
   spacing: 12px;
   text-shadow: none;
 }
@@ -3201,7 +3202,7 @@ StWidget.focused .app-well-app-running-dot {
 .candidate-popup-content {
   background-color: #3C3C3C;
   border-radius: 10px;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   margin: 3px 8px;
   padding: 6px;
   spacing: 6px;
@@ -3971,13 +3972,8 @@ StWidget.focused .app-well-app-running-dot {
   margin: 0 !important;
 }
 
-.dashtopanelMainPanel Gjs_arcmenu_arcmenu_com_menuButton_Arc_Menu_MenuButton.panel-button,
-.dashtopanelMainPanel Gjs_arcmenu_arcmenu_com_menuButton_ArcMenu_MenuButton.panel-button {
+.dashtopanelMainPanel .arcmenu-menu-button {
   border-radius: 5px !important;
-}
-
-.dashtopanelMainPanel Gjs_arcmenu_arcmenu_com_menuButton_Arc_Menu_MenuButton.panel-button > *,
-.dashtopanelMainPanel Gjs_arcmenu_arcmenu_com_menuButton_ArcMenu_MenuButton.panel-button > * {
   padding: 8px 6px !important;
 }
 
@@ -4103,7 +4099,7 @@ StWidget.focused .app-well-app-running-dot {
 }
 
 .cosmic-solid-bg {
-  background-color: #212121;
+  background-color: #242424;
 }
 
 .cosmic-dock #dock {

@@ -11,20 +11,20 @@ OPTIONS:
   -d, --dest DIR          Specify destination directory (Default: $DEST_DIR)
   -n, --name NAME         Specify theme name (Default: $THEME_NAME)
 
-  -t, --theme VARIANT     Specify theme color variant(s) [default|purple|pink|red|orange|yellow|green|teal|grey|nord|all] (Default: blue)
+  -t, --theme VARIANT     Specify theme color variant(s) [default|purple|pink|red|orange|yellow|green|teal|grey|all] (Default: blue)
   -c, --color VARIANT     Specify color variant(s) [standard|light|dark] (Default: All variants)s)
   -s, --size VARIANT      Specify size variant [standard|compact] (Default: All variants)
 
   -l, --libadwaita        Link installed Orchis gtk-4.0 theme to config folder for all libadwaita app use Orchis theme
 
-  --tweaks                Specify versions for tweaks [solid|compact|black|primary|macos|submenu|(nord/dracula)] (Options can mix [nord and dracula can not mix use!])
+  --tweaks                Specify versions for tweaks [solid|compact|black|primary|macos|submenu|(nord/dracula)] (Options can mix)
                           1. solid:              No transparency panel variant
                           2. compact:            No floating panel variant
                           3. black:              Full black variant
                           4. primary:            Change radio icon checked color to primary theme color (Default is Green)
                           5. macos:              Change window buttons to MacOS style
                           6. submenu:            Theme sub-menus, by Default submenus contrast
-                          7. [nord|dracula]:     Nord/dracula colorscheme themes
+                          7. [nord|dracula]:     Nord/dracula colorscheme themes (nord and dracula can not mix use!)
 
   --round                 Change theme round corner border-radius [Input the px value you want] (Suggested: 2px < value < 16px)
                           1. 3px
@@ -33,10 +33,11 @@ OPTIONS:
                           ...
                           13. 15px
 
-  --shell                 install gnome-shell version [38|40|42]
+  --shell                 install gnome-shell version [38|40|42|44]
                           1. 38:                 Gnome-shell version < 40.0
                           2. 40:                 Gnome-shell version = 40.0
-                          3. 42:                 Gnome-shell version >= 42.0
+                          3. 42:                 Gnome-shell version = 42.0
+                          4. 44:                 Gnome-shell version >= 44.0
 
   -r, --remove,
   -u, --uninstall         Uninstall/Remove installed themes
@@ -80,18 +81,22 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --shell)
       shift
-      for variant in $@; do
-        case "$variant" in
+      for shell in $@; do
+        case "$shell" in
           38)
-            shell="32-8"
+            shell="38"
             shift
             ;;
           40)
-            shell="40-0"
+            shell="40"
             shift
             ;;
           42)
-            shell="42-0"
+            shell="42"
+            shift
+            ;;
+          44)
+            shell="44"
             shift
             ;;
           -*)
@@ -322,9 +327,14 @@ if [[ ${remove} == 'true' ]]; then
     uninstall_theme
   fi
 else
+  if [[ "$libadwaita" == 'true' && "$UID" == "$ROOT_UID" ]]; then
+    echo -e "Do not run -l with sudo, that will link libadwaita theme to root folder !"
+    exit 0
+  fi
+
   install_theme
 
-  if [[ "$libadwaita" == 'true' ]]; then
+  if [[ "$libadwaita" == 'true' && "$UID" != "$ROOT_UID" ]]; then
     link_theme
   fi
 fi

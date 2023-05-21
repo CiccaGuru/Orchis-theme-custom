@@ -292,7 +292,7 @@ spinner {
 
 entry {
   min-height: $medium-size;
-  padding: 0 8px;
+  padding: 0 $space-size + 2px;
   border-spacing: $space-size;
   border-radius: $corner-radius;
   @extend %entry-basic;
@@ -701,10 +701,6 @@ button.color {
   min-height: $small-size;
   min-width: $small-size;
   padding: $space-size;
-
-  colorswatch:only-child {
-    // &, overlay { border-radius: 0; }
-  }
 }
 
 %list_button,
@@ -952,8 +948,12 @@ button.combo:only-child {
   border-radius: $corner-radius;
   box-shadow: $shadow-z4, inset 0 1px highlight($surface);
   background-color: $surface;
+  color: $text;
 
-  &:backdrop { box-shadow: $shadow-z2, inset 0 1px highlight($surface); }
+  &:backdrop {
+    box-shadow: $shadow-z2, inset 0 1px highlight($surface);
+    color: $text-disabled;
+  }
 }
 
 /************
@@ -1319,14 +1319,19 @@ headerbar {
   entry,
   spinbutton,
   button,
-  stackswitcher {
+  stackswitcher,
+  menubutton,
+  splitbutton {
     margin-top: $space-size;
     margin-bottom: $space-size;
   }
 
   menubutton > button,
   spinbutton > button,
-  splitbutton > button {
+  splitbutton > button,
+  splitbutton > menubutton,
+  .linked > menubutton,
+  entry > menubutton {
     margin-top: 0;
     margin-bottom: 0;
   }
@@ -1384,7 +1389,15 @@ headerbar {
     padding: $space-size;
     background-image: none;
     background-color: $titlebar;
-    box-shadow: inset 0 -1px $divider, inset 0 1px highlight($titlebar);
+    border-radius: $window-radius $window-radius 0 0;
+    box-shadow: inset 0 1px highlight($titlebar);
+
+    .tiled &,
+    .maximized &,
+    .fullscreen & {
+      box-shadow: none;
+      border-radius: 0;
+    }
 
     windowcontrols {
       button,
@@ -2280,14 +2293,14 @@ scrollbar {
       border: 4px solid transparent;
       border-radius: $circular-radius;
       background-clip: padding-box;
-      background-color: $text-disabled;
       box-shadow: none;
       outline: none;
+      background-color: $text-secondary-disabled;
 
-      &:hover { background-color: $text-secondary; }
-
-      &:active { background-color: $text; }
-
+      &:hover { background-color: $text-disabled; }
+  
+      &:active { background-color: $text-secondary; }
+  
       &:disabled { background-color: $text-secondary-disabled; }
     }
   }
@@ -2314,19 +2327,24 @@ scrollbar {
       box-shadow: none;
       outline: none;
 
-      > range > trough > slider {
-        min-width: 4px;
-        min-height: 4px;
-        margin: 4px - 1px;
-        border: 1px solid rgba($base, 0.3);
-        box-shadow: none;
-        outline: none;
+      > range > trough {
+        padding: 0;
+        margin: 0;
+
+        > slider {
+          min-width: 4px;
+          min-height: 4px;
+          margin: 3px;
+          border: 1px solid rgba($base, 0.3);
+          box-shadow: none;
+          outline: none;
+        }
       }
 
       button {
         min-width: 4px;
         min-height: 4px;
-        margin: 4px - 1px;
+        margin: 3px;
         border: 1px solid rgba($base, 0.3);
         border-radius: $circular-radius;
         background-color: $text-disabled;
@@ -2431,8 +2449,6 @@ switch {
     background-color: $primary;
     color: $primary;
   }
-
-  row:selected & { }
 }
 
 
@@ -3484,10 +3500,11 @@ list.boxed-list {
  *********************/
 .app-notification {
   @extend %toolbar_osd;
-  margin: 8px;
+  margin: $space-size * 1.5;
   border-spacing: $space-size * 1.5;
   padding: $space-size * 1.5;
   border: none;
+  background-image: none;
 
   button {
     @extend %button-flat;
@@ -4249,24 +4266,16 @@ colorchooser .popover.osd {
  * Window Decorations *
  **********************/
 window {
-  outline: none;
-  padding: 0;
-  margin: 0;
+  border: none;
 
   &.csd {
+    outline: none;
+    padding: 0;
+    margin: 0;
+    transition: none;
     border-radius: $window-radius;
-    box-shadow: $shadow-z16,
-                0 16px (24px * .6) 2px transparent,
-                0 6px (30px * .6) 5px transparent,
+    box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
                 inset 0 1px highlight($titlebar);
-
-    &.maximized,
-    &.fullscreen,
-    &.tiled,
-    &.tiled-top,
-    &.tiled-right,
-    &.tiled-bottom,
-    &.tiled-left { border-radius: 0; }
 
     @if $topbar == 'dark' {
       &.background {
@@ -4285,9 +4294,7 @@ window {
       // The biggest shadow should be in the same order then in the active state
       // or the jumping will happen during the transition.
       transition: $transition-shadow;
-      box-shadow: $shadow-z4,
-                  0 16px (24px * .6) 2px transparent,
-                  0 6px (30px * .6) 5px transparent,
+      box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
                   inset 0 1px highlight($titlebar);
 
       @if $topbar == 'dark' {
@@ -4305,18 +4312,10 @@ window {
     &.messagedialog {
       background-color: $surface;
       background-image: none;
-      box-shadow: $shadow-z16,
-                  0 16px (24px * .6) 2px transparent,
-                  0 6px (30px * .6) 5px transparent,
-                  inset 0 1px highlight($titlebar);
 
       &:backdrop {
         background-color: $background;
         background-image: none;
-        box-shadow: $shadow-z4,
-                    0 16px (24px * .6) 2px transparent,
-                    0 6px (30px * .6) 5px transparent,
-                    inset 0 1px highlight($titlebar);
       }
     }
 
@@ -4328,10 +4327,23 @@ window {
         }
       }
     }
-  }
 
-  &.ssd {
-    box-shadow: none; // just doing borders, wm draws actual shadows
+    &.tiled,
+    &.tiled-top,
+    &.tiled-left,
+    &.tiled-right,
+    &.tiled-bottom {
+      border-radius: 0;
+      outline: none;
+    }
+  
+    &.maximized,
+    &.fullscreen {
+      border-radius: 0;
+      outline: none;
+      box-shadow: none;
+      transition: none;
+    }
   }
 
   &.solid-csd {

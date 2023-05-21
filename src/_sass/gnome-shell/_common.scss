@@ -60,10 +60,60 @@ $bubble_button_radius: if($corner_style == 'circular', $circular-radius, $materi
 }
 
 %osd_panel {
-  color: on(dark);
-  background-color: $system;
+  color: on($popover);
+  background-color: $popover;
   border: none;
   box-shadow: $shell-shadow-z1;
   border-radius: 50%; //$material-radius;
   padding: $space-size * 2;
 }
+
+/* General Typography */
+
+%large_title {
+  font-weight: 300;
+  @include fontsize(24);
+}
+
+%title_1 {
+  font-weight: 800;
+  @include fontsize(20);
+}
+
+%title_2 {
+  font-weight: 800;
+  @include fontsize(15);
+}
+
+%title_3 {
+  font-weight: 700;
+  @include fontsize(15);
+}
+
+%title_4 {
+  font-weight: 700;
+  @include fontsize(13);
+}
+
+%heading {
+  font-weight: 700;
+  @include fontsize(11);
+}
+
+%caption_heading {
+  font-weight: 700;
+  @include fontsize(9);
+}
+
+%caption {
+  font-weight: 400;
+  @include fontsize(9);
+}
+
+%smaller {
+  font-weight: 400;
+  @include fontsize(8);
+}
+
+%monospace {font-family: monospace;}
+%numeric { font-feature-settings: "tnum";}

@@ -2,7 +2,7 @@
 
 %icon_tile {
   color: on(dark);
-  border-radius: $material-radius * 1.5;
+  border-radius: $material-radius * 2;
   padding: $space-size * 2;
   border: none;
   transition-duration: $longer-duration;
@@ -60,21 +60,27 @@
   border-radius: $material-radius * 2;
 
   .overview-icon {
-    background-color: on(dark, divider);
+    background-color: on(dark, fill);
     border-radius: $material-radius * 2;
   }
 
   &:hover .overview-icon {
     background-color: on(dark, divider);
   }
+
+  &:active .overview-icon {
+    background-color: on(dark, track);
+  }
 }
 
 // expanded folder
 .app-folder-dialog { //style like the dash
   border-radius: $material-radius * 4;
-  border: 0 solid rgba(white, 0.15);
+  border: none;
   background-color: rgba($system, 0.95);
   spacing: 6px;
+  box-shadow: none;
+  outline: none;
 
   .folder-name-container {
     padding: 24px 36px 0;
@@ -125,7 +131,7 @@
       padding: $space-size;
       border-radius: if($corner_style == 'circular', $circular-radius, $material-radius);
 
-      > StIcon { icon-size: 16px }
+      > StIcon { icon-size: $base-icon-size }
 
       &:hover { background-color: on(dark, divider); }
       &:checked, &:active { background-color: on(dark, track); }
@@ -161,7 +167,7 @@
 }
 
 StWidget.focused .app-well-app-running-dot {
-  width: 16px;
+  width: $base-icon-size;
   background-color: $primary;
 }
 
@@ -199,7 +205,7 @@ StWidget.focused .app-well-app-running-dot {
 .system-action-icon {
   background-color: rgba(0,0,0,0.8);
   color: #fff;
-  border-radius: 99px;
+  border-radius: $circular-radius;
 }
 
 .page-navigation-hint {

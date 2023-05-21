@@ -21,7 +21,7 @@
     @if ($state == 'disabled') { @return rgba(black, 0.38); }
     @if ($state == 'secondary-disabled') { @return rgba(black, 0.26); }
     @if ($state == 'track') { @return rgba(black, 0.26); }
-    @if ($state == 'track-disabled') { @return rgba(black, 0.12); }
+    @if ($state == 'track-disabled') { @return rgba(black, 0.15); }
     @if ($state == 'divider') { @return rgba(black, 0.12); }
     @if ($state == 'secondary-fill') { @return rgba(black, 0.08); }
     @if ($state == 'fill') { @return rgba(black, 0.04); }
@@ -31,7 +31,7 @@
     @if ($state == 'disabled') { @return rgba(white, 0.5); }
     @if ($state == 'secondary-disabled') { @return rgba(white, 0.3); }
     @if ($state == 'track') { @return rgba(white, 0.3); }
-    @if ($state == 'track-disabled') { @return rgba(white, 0.12); }
+    @if ($state == 'track-disabled') { @return rgba(white, 0.15); }
     @if ($state == 'divider') { @return rgba(white, 0.12); }
     @if ($state == 'secondary-fill') { @return rgba(white, 0.08); }
     @if ($state == 'fill') { @return rgba(white, 0.04); }
@@ -114,10 +114,12 @@ $titlebar-backdrop:                     background(e);//#2a2a2a if($topbar == 'd
 
 $keyboard:                              if($variant == 'light', $grey-050, $grey-800); // for gnome-shell keyboard
 $keyboard-alt:                          if($variant == 'light', $grey-300, $grey-900); // for gnome-shell keyboard
-$system:                                if($blackness == 'true', $grey-850, $grey-800); // for gnome-shell keyboard
+$system:                                if($blackness == 'true', $grey-850, $grey-750); // for gnome-shell keyboard
+$popover:                               if($variant == 'light', background(a), background(e));
 
 $panel-solid:                           if($topbar == 'dark', background(e), background(c)); // for Unity panel which doesn't allow translucent colors
 $panel:                                 if($opacity == 'default', rgba($panel-solid, 0.65), $panel-solid);
+$shell:                                 if($topbar == 'dark', rgba(black, 0.65), background(c)); // for gnome-shell
 
 $button:                                if($blackness == 'true' and $variant == 'dark', on($background, secondary-fill), on($background, fill));
 $entry:                                 if($blackness == 'true' and $variant == 'dark', on($background, secondary-fill), on($background, fill));

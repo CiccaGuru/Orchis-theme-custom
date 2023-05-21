@@ -113,14 +113,18 @@ window.background.chromium {
 
   menu {
     padding: 0;
-    border-color: $divider;
+    border: 1px solid $divider;
     box-shadow: none;
 
     menuitem { border-radius: 0; }
   }
 
+  headerbar {
+    padding: 0 $space-size * 2;
+  }
+
   // Workaround for non-animatable buttons in headerbar
-  headerbar button:active { background-color: $overlay-active; }
+  // headerbar button:active { background-color: $overlay-active; }
 
   spinner { color: $primary; }
 
@@ -256,6 +260,17 @@ window.background:not(.csd) {
   }
 }
 
+//
+// Xapp popup
+//
+
+.background.popup.xapp-status-icon-menu-window {
+  decoration {
+    border-radius: $menu-radius;
+    box-shadow: $shadow-z4;
+  }
+}
+
 /************
  * Inkscape *
  ************/
@@ -382,8 +397,8 @@ window.background.csd {
 window.background:not(.solid-csd):not(.csd) {
   // reserved area at the most-right side of GtkMenuBar
   > grid.horizontal > grid.horizontal {
-    background-color: $titlebar;
-    box-shadow: inset 0 -1px $divider;
+    background-color: transparent;
+    // box-shadow: inset 0 -1px $divider;
 
     // > button.flat.small-button { // 'close' button
     // }

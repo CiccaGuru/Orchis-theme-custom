@@ -13,7 +13,7 @@ $osd_levelbar_height: 10px;
   min-height: 24px;
 
   StIcon {
-    icon-size: 24px;
+    icon-size: 32px;
   }
 
   .osd-monitor-label { font-size: 3em;  }
@@ -25,6 +25,10 @@ $osd_levelbar_height: 10px;
 
   .level {
     height: $osd_levelbar_height;
+    min-width: 160px;
+    margin-bottom: 4px;
+    &:first-child { margin-bottom: 0px; }
+
     -barlevel-height: $osd_levelbar_height;
     -barlevel-background-color: rgba($primary, 0.3);
     -barlevel-active-background-color: $primary;
@@ -35,6 +39,17 @@ $osd_levelbar_height: 10px;
     &:ltr { margin-right: $space-size; }
     &:rtl { margin-left: $space-size; }
   }
+}
+
+// Monitor number label
+.osd-monitor-label {
+  @extend %osd_panel;
+  border-radius: $window-radius;
+  font-size: 3em;
+  font-weight: bold;
+  margin: $margin-size * 3;
+  text-align: center;
+  min-width: 1.3em;
 }
 
 /* Pad OSD */
@@ -53,4 +68,5 @@ $osd_levelbar_height: 10px;
 
 .resize-popup {
   @extend %osd_panel;
+  border-radius: $window-radius;
 }

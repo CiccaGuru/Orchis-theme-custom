@@ -736,9 +736,9 @@ button.color {
   min-width: $small-size;
   padding: $space-size;
 
-  colorswatch:only-child {
-    // &, overlay { border-radius: 0; }
-  }
+  // colorswatch:only-child {
+  //   &, overlay { border-radius: 0; }
+  // }
 }
 
 
@@ -1295,7 +1295,7 @@ searchbar > revealer > box {
   &.default-decoration {
     min-height: $small-size;
     box-shadow: inset 0 1px highlight($titlebar);
-    border-radius: $corner-radius $corner-radius 0 0;
+    border-radius: $window-radius $window-radius 0 0;
     border: none;
 
     @if $mac_style == 'true' {
@@ -1330,7 +1330,7 @@ searchbar > revealer > box {
   }
 
   .solid-csd & {
-    &:dir(rtl), &:dir(ltr) { // specificity bump
+    &, &:dir(rtl), &:dir(ltr) { // specificity bump
       border-radius: 0;
       box-shadow: none; // just remove the highlight
     }
@@ -1704,19 +1704,27 @@ menubar,
   border-radius: $menu-radius + 1px;
 }
 
-menu,
-.menu,
-.context-menu {
+menu {
   margin: $space-size / 2; // See https://bugzilla.gnome.org/show_bug.cgi?id=591258
   padding: $space-size;
-  box-shadow: inset 0 1px highlight($surface);
   background-color: $surface;
   background-clip: border-box;
-  border: 1px solid $frame; // adds borders in a non composited env
 
-  .csd & {
+  .background > & {
+    border-radius: $menu-radius;
+    box-shadow: inset 0 1px highlight($surface);
+  }
+
+  .background:not(.popup) > & {
+    border: 1px solid $frame; // adds borders in a non composited env
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .background.csd > & {
     border: none; // axes borders in a composited env
     border-radius: $menu-radius;
+    box-shadow: inset 0 1px highlight($surface);
   }
 
   menuitem {
@@ -1766,7 +1774,7 @@ menu,
   > arrow {
     min-height: 16px;
     min-width: 16px;
-    padding: $space-size / 2 + 1px;
+    padding: $space-size;
     background-color: $surface;
     color: $text-secondary;
     border-radius: $menu-radius - 3px;
@@ -1777,8 +1785,8 @@ menu,
     }
 
     &.bottom {
-      margin-top: 4px * 2;
-      margin-bottom: -6px;
+      margin-top: (8px + $space-size / 2);
+      margin-bottom: -12px;
       -gtk-icon-source: -gtk-icontheme('pan-down-symbolic');
       border-image: image($divider) 1 0 0 / 1px 0 0;
     }
@@ -2284,11 +2292,11 @@ scrollbar {
     border: 4px solid transparent;
     border-radius: $circular-radius;
     background-clip: padding-box;
-    background-color: $text-disabled;
+    background-color: $text-secondary-disabled;
 
-    &:hover { background-color: $text-secondary; }
+    &:hover { background-color: $text-disabled; }
 
-    &:active { background-color: $text; }
+    &:active { background-color: $text-secondary; }
 
     &:disabled { background-color: $text-secondary-disabled; }
   }
@@ -2427,8 +2435,6 @@ switch {
     background-color: $primary;
     color: $primary;
   }
-
-  row:selected & { }
 }
 
 
@@ -3197,16 +3203,16 @@ expander {
  * Calendar *
  ************/
 calendar {
-  padding: 1px;
+  padding: $space-size / 2 $space-size;
   border: 1px solid $divider;
   color: $text;
 
   &:disabled { color: $text-disabled; }
 
   &:selected {
-    @extend %selected_items;
+    @extend %selected_items_primary;
 
-    border-radius: $corner-radius + 1px;
+    border-radius: $menuitem-radius;
   }
 
   &.header {
@@ -3215,7 +3221,14 @@ calendar {
     border-radius: 0;
   }
 
-  &.button { @extend %button-flat-simple; }
+  &.button {
+    @extend %button-flat-simple;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
 
   &.highlight {
     color: $text-secondary;
@@ -3408,11 +3421,6 @@ stacksidebar.sidebar {
 
 separator.sidebar {
   background-color: $divider;
-
-  &.selection-mode,
-  .selection-mode & {
-    // background-color: $divider;
-  }
 }
 
 
@@ -3725,14 +3733,6 @@ colorswatch {
 
   &.light { color: on(light); }
 
-  overlay {
-    // transition: $transition-shadow;
-
-    // &:hover { }
-    //
-    // &:drop(active) { }
-  }
-
   &#add-color-button {
     border-radius: $menu-radius $menu-radius 0 0;
     color: $text;
@@ -3750,8 +3750,7 @@ colorswatch {
     overlay { box-shadow: none; }
   }
 
-  row:selected & {
-  }
+  // row:selected & { }
 
   &#editor-color-sample {
     border-radius: $menu-radius;
@@ -3800,9 +3799,9 @@ colorchooser .popover.osd {
  * Window Decorations *
  **********************/
 decoration {
-  transition: $transition-shadow;
   border-radius: $window-radius;
-  box-shadow: $shadow-z16, 0 16px (24px * .6) 2px transparent, 0 6px (30px * .6) 5px transparent;
+  box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+  border: none;
 
   // FIXME rationalize shadows
 
@@ -3814,7 +3813,8 @@ decoration {
     // change when we go to backdrop, to prevent jumping windows.
     // The biggest shadow should be in the same order then in the active state
     // or the jumping will happen during the transition.
-    box-shadow: $shadow-z4, 0 16px (24px * .6) 2px transparent, 0 6px (30px * .6) 5px transparent;
+    box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+    transition: $transition-shadow;
   }
 
   .maximized &,
@@ -3831,6 +3831,11 @@ decoration {
   .ssd & {
     border-radius: $window-radius $window-radius 0 0;
     box-shadow: none; // just doing borders, wm draws actual shadows
+    margin: 0;
+
+    &, &:backdrop {
+      transition: none;
+    }
   }
 
   .csd.popup & {
@@ -3852,7 +3857,7 @@ decoration {
 
   .solid-csd & {
     margin: 0;
-    padding: 2px;
+    padding: 1px;
     border-radius: 0;
     box-shadow: none;
     box-shadow: inset 0 1px highlight($titlebar);
@@ -3953,12 +3958,12 @@ stackswitcher {
  *************/
 // Outline for low res icons
 .lowres-icon {
-  // -gtk-icon-shadow: none;
+  -gtk-icon-shadow: none;
 }
 
 // Drapshadow for large icons
 .icon-dropshadow {
-  // -gtk-icon-shadow: none;
+  -gtk-icon-shadow: none;
 }
 
 

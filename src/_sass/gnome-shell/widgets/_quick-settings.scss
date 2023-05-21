@@ -5,7 +5,7 @@
   border: none;
 
   .icon-button, .button {
-    padding: 12px;
+    padding: $space-size * 2;
   }
 }
 
@@ -16,9 +16,9 @@
 
 .quick-toggle {
   border-radius: $circular-radius;
-  min-width: 14em;
-  max-width: 14em;
-  min-height: $space-size * 8 + 16px;
+  min-width: if($compact == 'false', 14em, 11em);
+  max-width: if($compact == 'false', 14em, 11em);
+  min-height: $space-size * 4 + $base-icon-size;
   border: none;
   background-color: rgba($text, 0.06) !important;
 
@@ -32,16 +32,16 @@
 
   &:checked {
     background-color: $primary !important;
-    color: on(dark);
+    color: on($primary) !important;
 
     &:hover {
       background-color: mix($text, $primary, 10%) !important;
-      color: on(dark);
+      color: on($primary) !important;
     }
 
     &:active {
       background-color: mix($text, $primary, 20%) !important;
-      color: on(dark);
+      color: on($primary) !important;
     }
   }
 
@@ -55,7 +55,7 @@
   &:rtl > StBoxLayout { padding-right: $space-size * 2.5; }
 
   .quick-toggle-label { font-weight: bold; }
-  .quick-toggle-icon, .quick-toggle-arrow { icon-size: 16px; }
+  .quick-toggle-icon, .quick-toggle-arrow { icon-size: $base-icon-size; }
 }
 
 .quick-menu-toggle {
@@ -82,13 +82,13 @@
 
   .slider-bin {
     &:focus { @include button(focus); }
-    min-height: 16px; // slider size
+    min-height: $base-icon-size; // slider size
     padding: $space-size;
     border-radius: $circular-radius;
   }
 
   .quick-toggle-icon {
-    icon-size: 16px;
+    icon-size: $base-icon-size;
   }
 }
 
@@ -106,6 +106,7 @@
   }
 
   .popup-menu-item {
+    padding: $space-size + 2px !important;
     border-radius: $circular-radius !important;
 
     @if $submenu_style == 'true' {
@@ -120,6 +121,10 @@
         color: $text !important;
         background-color: $divider !important;
       }
+
+      &:insensitive {
+        color: $text-secondary-disabled !important;
+      }
     } @else {
       color: rgba(black, 0.65) !important;
 
@@ -131,6 +136,10 @@
       &:active {
         color: rgba(black, 0.75) !important;
         background-color: rgba(black, 0.2) !important;
+      }
+
+      &:insensitive {
+        color: rgba(black, 0.25) !important;
       }
     }
 
@@ -147,6 +156,8 @@
     }
 
     .popup-separator-menu-item-separator {
+      margin: $space-size $space-size * 3 $space-size 0 !important;
+
       @if $submenu_style == 'true' {
         background-color: $border !important;
       } @else {
