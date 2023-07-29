@@ -220,16 +220,12 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   background-image: url("assets/checkbox-unchecked.svg");
 }
 
-.check-box:focus StBin {
-  background-image: url("assets/checkbox-unchecked-focused.svg");
+.check-box StBin, .check-box:focus StBin {
+  background-image: url("assets/checkbox-off.svg");
 }
 
-.check-box:checked StBin {
-  background-image: url("assets/checkbox-checked.svg");
-}
-
-.check-box:focus:checked StBin {
-  background-image: url("assets/checkbox-checked-focused.svg");
+.check-box:checked StBin, .check-box:focus:checked StBin {
+  background-image: url("assets/checkbox.svg");
 }
 
 .radiobutton CinnamonGenericContainer {
@@ -250,16 +246,12 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   background-image: url("assets/checkbox-unchecked.svg");
 }
 
-.radiobutton:focus StBin {
-  background-image: url("assets/checkbox-unchecked-focused.svg");
+.radiobutton StBin, .radiobutton:focus StBin {
+  background-image: url("assets/radiobutton-off.svg");
 }
 
-.radiobutton:checked StBin {
-  background-image: url("assets/checkbox-checked.svg");
-}
-
-.radiobutton:focus:checked StBin {
-  background-image: url("assets/checkbox-checked-focused.svg");
+.radiobutton:checked StBin, .radiobutton:focus:checked StBin {
+  background-image: url("assets/radiobutton.svg");
 }
 
 .toggle-switch {
