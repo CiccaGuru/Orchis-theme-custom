@@ -150,7 +150,10 @@ label {
   }
 }
 
-%dim-label, .dim-label { color: $text-secondary; }
+%dim-label, .dim-label {
+  color: $text-disabled;
+  opacity: 1;
+}
 
 .accent {
   color: $primary;
@@ -281,7 +284,18 @@ spinner {
   &:drop(active) { @include entry(hover); }
   &:disabled { @include entry(disabled); }
 
-  image {
+  > text {
+    > placeholder {
+      @extend .dim-label;
+    }
+
+    > block-cursor {
+      color: $background;
+      background-color: $text;
+    }
+  }
+
+  > image {
     color: $text-secondary;
 
     &:hover, &:active { color: $text; }
@@ -544,19 +558,22 @@ button {
 
   // big standalone buttons like in Documents pager
   &.osd {
+    min-height: 24px;
+    min-width: 24px;
+    padding: $space-size;
     box-shadow: none;
-    padding: ($large-size - 24px) / 2 ($large-size - 16px) / 2;
-    background-color: $base;
-    border: 1px solid $divider;
+    background-color: rgba(black, 0.5);
+    border: none;
     background-clip: padding-box;
+    color: rgba(white, 0.85);
 
-    &:hover { background-color: mix($text, $base, 10%); }
+    &:hover { background-color: rgba(black, 0.65); color: white; }
 
-    &:active { background-color: mix($text, $base, 20%); }
+    &:active { background-color: rgba(black, 0.75); color: white; }
 
-    &.image-button { padding: ($large-size - 24px) / 2; }
+    // &.image-button { padding: $space-size; }
 
-    &:disabled { opacity: 0; }
+    &:disabled { opacity: 0; color: rgba(white, 0.35); }
   }
 
   // Suggested and Destructive Action buttons
@@ -1044,14 +1061,20 @@ searchbar > revealer > box {
  * Header bars *
  ***************/
 
-%flat-titlebar-button {
+%titlebar-button-reset {
+  @extend %button-flat;
   color: $text-secondary;
 
   &:focus, &:hover, &:active, &:checked { color: $text; }
 
   &:disabled { color: $text-secondary-disabled; }
 
-  &:checked:disabled { color: $text-disabled; }
+  &:checked {
+    &:disabled {
+      background-color: transparent;
+      color: $text-disabled;
+    }
+  }
 
   &:backdrop {
     color: $text-disabled;
@@ -1118,7 +1141,18 @@ searchbar > revealer > box {
     color: $titlebar-text-disabled;
   }
 
-  image {
+  > text {
+    > placeholder {
+      color: $titlebar-text-disabled;
+    }
+
+    > block-cursor {
+      color: $titlebar;
+      background-color: $titlebar-text;
+    }
+  }
+
+  > image {
     color: $titlebar-text-secondary;
 
     &:hover, &:active { color: $titlebar-text; }
@@ -1129,30 +1163,47 @@ searchbar > revealer > box {
 
 headerbar {
   transition: background-color $duration $ease-out, color $duration $ease-out;
-  box-shadow: inset 0 -1px $divider;
+  box-shadow: inset 0 -1px $divider, inset 0 1px highlight($titlebar);
   color: $titlebar-text;
   min-height: $large-size;
   padding: 0;
   margin: 0;
-
-  @if $topbar == 'dark' {
-    background-color: transparent;
-  } @else {
-    background-color: $titlebar;
-  }
+  background-color: $titlebar;
+  border-radius: $window-radius $window-radius 0 0;
 
   &:disabled { color: $titlebar-text-disabled; }
 
   &:backdrop {
     color: $titlebar-text-secondary;
+    background-color: $titlebar-backdrop;
+    filter: none;
 
-    @if $topbar == 'dark' {
-      background-color: transparent;
-    } @else {
-      background-color: $titlebar-backdrop;
+    > windowhandle {
+      filter: none;
+      transition: none;
     }
 
     &:disabled { color: $titlebar-text-secondary-disabled; }
+  }
+
+  &.flat {
+    color: $text;
+
+    &, &:backdrop {
+      background-color: transparent;
+      box-shadow: inset 0 1px highlight($titlebar);
+    }
+
+    .subtitle,
+    .dim-label {
+      color: $text-secondary;
+  
+      &:backdrop { color: $text-disabled; }
+    }
+
+    button:not(.suggested-action):not(.destructive-action) {
+      @extend %titlebar-button-reset;
+    }
   }
 
   .title {
@@ -1219,17 +1270,6 @@ headerbar {
   }
 
   button.toggle { border-radius: $circular-radius; }
-
-  &.flat {
-    background-color: $background;
-    box-shadow: inset 0 1px highlight($background);
-    color: $text-secondary;
-    border-radius: $window-radius $window-radius 0 0;
-
-    button:not(.suggested-action):not(.destructive-action) {
-      @extend %flat-titlebar-button;
-    }
-  }
 
   background.csd.info &.flat,
   background.csd.about &.flat { // reset
@@ -1313,6 +1353,18 @@ headerbar {
     > box.end {
       border-spacing: $space-size;
     }
+
+    &, > widget {
+      > box.start:dir(ltr),
+      > box.end:dir(rtl) {
+        margin-right: $space-size;
+      }
+
+      > box.start:dir(rtl),
+      > box.end:dir(ltr) {
+        margin-left: $space-size;
+      }
+    }
   }
 
   // add vertical margins to common widget on the headerbar to avoid them spanning the whole height
@@ -1382,11 +1434,12 @@ headerbar {
   .maximized &,
   .fullscreen & {
     border-radius: 0;
+    box-shadow: inset 0 -1px $divider;
   }
 
   &.default-decoration {
     min-height: $small-size;
-    padding: $space-size;
+    padding: 0;
     background-image: none;
     background-color: $titlebar;
     border-radius: $window-radius $window-radius 0 0;
@@ -1407,11 +1460,12 @@ headerbar {
         @if $mac_style == 'true' {
           min-height: 16px;
           min-width: 16px;
+          padding: ($small-size - 16px) / 2 0;
           margin: 0 $space-size - 2px;
         } @else {
           min-height: $small-size;
           min-width: $small-size;
-          margin: 0;
+          margin: $space-size 0;
         }
       }
     }
@@ -1453,19 +1507,19 @@ window.devel {
 %mac_window_button {
   min-height: 16px;
   min-width: 16px;
-  padding: 0;
-  margin: 0 $space-size - 2px;
+  padding: ($medium-size - 16px) / 2 0;
+  margin-left: $space-size - 2px;
+  margin-right: $space-size - 2px;
 
   &.minimize, &.maximize, &.close {
     color: transparent;
 
-    &:hover {
+    &, &:hover, &:active {
       box-shadow: none;
-    }
-
-    &:active {
-      box-shadow: inset 0 0 0 9999px rgba(black, if($topbar == 'dark', 0.12, 0));
-      background-image: radial-gradient(circle, rgba(black, 0.12) 10%, transparent 0%);
+      background-color: transparent;
+      background-image: none;
+      transition: none;
+      animation: none;
     }
 
     &:hover, &:active {
@@ -1474,7 +1528,8 @@ window.devel {
 
     &:backdrop {
       color: transparent;
-      background-color: $titlebar-track;
+
+      > image { background-color: $titlebar-track; }
 
       &:hover, &:active {
         color: $titlebar-text-disabled;
@@ -1483,26 +1538,26 @@ window.devel {
   }
 
   &.minimize { // Window minimize button
-    background-color: $titlebutton-min;
+    > image { background-color: $titlebutton-min; }
 
-    &:active {
-      background-color: mix($titlebar-text, $titlebutton-min, 25%);
+    &:active > image {
+      background-color: mix(black, $titlebutton-min, 25%);
     }
   }
 
   &.maximize { // Window maximize button
-    background-color: $titlebutton-max;
+    > image { background-color: $titlebutton-max; }
 
-    &:active {
-      background-color: mix($titlebar-text, $titlebutton-max, 25%);
+    &:active > image {
+      background-color: mix(black, $titlebutton-max, 25%);
     }
   }
 
   &.close { // Window close button
-    background-color: $titlebutton-close;
+    > image { background-color: $titlebutton-close; }
 
-    &:active {
-      background-color: mix($titlebar-text, $titlebutton-close, 25%);
+    &:active > image {
+      background-color: mix(black, $titlebutton-close, 25%);
     }
   }
 }
@@ -1513,33 +1568,17 @@ headerbar windowcontrols {
   border-spacing: $space-size;
 
   @if $mac_style == 'true' {
-    &:not(.empty) {
-      &.start:dir(ltr),
-      &.end:dir(rtl) {
-        margin-right: $window-space;
-        margin-left: $window-space;
-      }
+    padding: 0 $space-size;
+  }
 
-      &.start:dir(rtl),
-      &.end:dir(ltr) {
-        margin-left: $window-space;
-        margin-right: $window-space;
-      }
-    }
-  } @else {
-    &:not(.empty) {
-      &.start:dir(ltr),
-      &.end:dir(rtl) {
-        margin-right: 0;
-        margin-left: 0;
-      }
+  &.start:dir(ltr),
+  &.end:dir(rtl) {
+    margin-right: $space-size;
+  }
 
-      &.start:dir(rtl),
-      &.end:dir(ltr) {
-        margin-left: 0;
-        margin-right: 0;
-      }
-    }
+  &.start:dir(rtl),
+  &.end:dir(ltr) {
+    margin-left: $space-size;
   }
 
   button:not(.suggested-action):not(.destructive-action) {
@@ -1547,21 +1586,23 @@ headerbar windowcontrols {
 
     @if $mac_style == 'true' {
       @extend %mac_window_button;
-    } @else {
-      // @extend %button-flat-simple;
 
-      &, &:hover, &:active, &:backdrop {
-        > image {
-          background-color: transparent;
-        }
+      > image {
+        border-radius: 100%;
+        padding: 0;
+        border: none;
+        outline: none;
+        box-shadow: none;
       }
-    }
-
-    > image {
-      padding: 0;
-      border: none;
-      outline: none;
-      box-shadow: none;
+    } @else {
+      > image {
+        padding: 0;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background-color: transparent;
+        background-image: none;
+      }
     }
   }
 }
@@ -1911,6 +1952,7 @@ popover.background {
 
       > row {
         padding: $space-size $space-size * 2;
+        margin: 0;
       }
 
       separator { margin: 0; }
@@ -3082,14 +3124,12 @@ scrolledwindow {
   }
 
   stack &.frame {
-    // border-radius: $corner-radius;
-
     viewport.frame list { border: none; }
   }
 
   // This is used when content is touch-dragged past boundaries.
   // draws a box on top of the content, the size changes programmatically.
-  @at-root overshoot {
+  > overshoot {
     &.top { @include overshoot(top); }
 
     &.bottom { @include overshoot(bottom); }
@@ -3100,20 +3140,32 @@ scrolledwindow {
   }
 
   // Overflow indication, works similarly to the overshoot, the size if fixed tho.
-  // @at-root undershoot {
-  //   &.top { @include undershoot(top); }
-  //
-  //   &.bottom { @include undershoot(bottom); }
-  //
-  //   &.left { @include undershoot(left); }
-  //
-  //   &.right { @include undershoot(right); }
-  // }
+  &.undershoot-top {
+    @include undershoot(top);
+  }
 
-  @at-root junction { // the small square between two scrollbars
+  &.undershoot-bottom {
+    @include undershoot(bottom);
+  }
+
+  &.undershoot-start {
+    &:dir(ltr) { @include undershoot(left); }
+    &:dir(rtl) { @include undershoot(right); }
+  }
+
+  &.undershoot-end {
+    &:dir(ltr) { @include undershoot(right); }
+    &:dir(rtl) { @include undershoot(left); }
+  }
+
+  > junction { // the small square between two scrollbars
     border: none;
     background-color: $base;
   }
+}
+
+* scrolledwindow > undershoot {
+  box-shadow: none;
 }
 
 // vbox and hbox separators
@@ -3722,6 +3774,16 @@ filechooser {
   stack.view {
     frame > border { border: none; }
   }
+
+  gridview {
+    @include undershoot(top, $frame, true);
+  }
+
+  placesview {
+    > stack > scrolledwindow {
+      @include undershoot(bottom);
+    }
+  }
 }
 
 filechooserbutton > button > box {
@@ -3751,9 +3813,14 @@ window.aboutdialog {
 window.about.background.csd {
   headerbar {
     color: $text-secondary;
+    
+    &, &:backdrop {
+      background-color: transparent;
+      box-shadow: inset 0 1px highlight($titlebar);
+    }
 
     button:not(.suggested-action):not(.destructive-action) {
-      @extend %flat-titlebar-button;
+      @extend %titlebar-button-reset;
     }
   }
 }
@@ -3841,6 +3908,18 @@ separator.sidebar {
 .navigation-sidebar {
   padding: $space-size 0; //only vertical padding. horizontal row size would clip
   border-right: none;
+
+  &, &.view, &.view:disabled {
+    background-color: transparent;
+    color: inherit;
+  }
+
+  &.background {
+    &, &:disabled {
+      background-color: $background;
+      color: $text;
+    }
+  }
 
   > row {
     min-height: $small-size;
@@ -4066,7 +4145,7 @@ infobar {
       background-color: $base;
 
       button {
-        &, &.text-button:not(:disabled) { color: $primary; }
+        &.text-button:not(.suggested-action):not(.destructive-action):not(:disabled) { color: $primary; }
       }
     }
   }
@@ -4279,17 +4358,6 @@ window {
     box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
                 inset 0 1px highlight($titlebar);
 
-    @if $topbar == 'dark' {
-      &.background {
-        background-color: transparent;
-        background-image: linear-gradient(to bottom,
-                                          $titlebar,
-                                          $titlebar $large-size,
-                                          $background $large-size,
-                                          $background);
-      }
-    }
-
     &:backdrop {
       // the transparent shadow here is to enforce that the shadow extents don't
       // change when we go to backdrop, to prevent jumping windows.
@@ -4298,17 +4366,6 @@ window {
       transition: $transition-shadow;
       box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
                   inset 0 1px highlight($titlebar);
-
-      @if $topbar == 'dark' {
-        &.background {
-          background-color: transparent;
-          background-image: linear-gradient(to bottom,
-                                            $titlebar-backdrop,
-                                            $titlebar-backdrop $large-size,
-                                            $background $large-size,
-                                            $background);
-        }
-      }
     }
 
     &.messagedialog {
@@ -4318,15 +4375,6 @@ window {
       &:backdrop {
         background-color: $background;
         background-image: none;
-      }
-    }
-
-    &.about, &.info {
-      @if $topbar == 'dark' {
-        &.background, &.background:backdrop {
-          background-color: $background;
-          background-image: none;
-        }
       }
     }
 

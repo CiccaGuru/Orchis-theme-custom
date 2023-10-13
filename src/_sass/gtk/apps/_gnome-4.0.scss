@@ -20,16 +20,57 @@ $topbar: 'dark';
     box-shadow: none;
   }
 
+  .sidebar-pane,
+  .content-pane {
+    headerbar {
+      color: $titlebar-text;
+      background-color: transparent;
+      box-shadow: none;
+
+      &, &:backdrop {
+        background-color: transparent;
+        box-shadow: none;
+      }
+
+      .subtitle,
+      .dim-label {
+        color: $titlebar-text-secondary;
+
+        &:backdrop { color: $titlebar-text-disabled; }
+      }
+
+      button:not(.suggested-action):not(.destructive-action) {
+        @extend %titlebar-button;
+      }
+    }
+  }
+
   flap > separator {
     background: none;
     min-width: 0;
   }
 
-  flap.unfolded{
-    background:$titlebar;
+  .sidebar-pane {
+    &, &:backdrop { background-color: transparent; }
+
+    &:dir(ltr), &.end:dir(rtl) {
+      &, banner > revealer > widget {
+        box-shadow: none;
+        border-right: none;
+      }
+    }
+
+    &:dir(rtl), &.end:dir(ltr) {
+      &, banner > revealer > widget {
+        box-shadow: none;
+        border-left: none;
+      }
+    }
   }
-  flap.unfolded > placessidebar {
-    background-color: transparent;
+
+  flap.unfolded > placessidebar,
+  .sidebar-pane > toolbarview > placessidebar {
+    background-color: if($topbar == 'dark' and $variant == 'light', $titlebar, $base);
     border-radius: $window-radius;
     color: $titlebar-text-secondary;
 
@@ -37,7 +78,7 @@ $topbar: 'dark';
       margin: 0 0 $space-size * 2 $space-size * 2;
       border-radius: $window-radius - $space-size;
 
-      overshoot {
+      > overshoot, > undershoot {
         &.top { border-radius: $window-radius - $space-size $window-radius - $space-size 0 0; }
         &.bottom { border-radius: 0 0 $window-radius - $space-size $window-radius - $space-size; }
       }
@@ -149,8 +190,8 @@ $topbar: 'dark';
               > revealer > box {
                 color: $primary;
                 background-color: $base;
-                border-image-width: 10px 10px 10px 46px;
-                border-image-slice: 10 10 10 46;
+                border-image-width: 16px 16px 16px 46px;
+                border-image-slice: 16 16 16 46;
                 border-image-repeat: stretch;
                 border-image-source: -gtk-scaled(url("assets/row-selected.png"),
                                                  url("assets/row-selected@2.png"));
@@ -158,6 +199,7 @@ $topbar: 'dark';
 
               label.sidebar-label {
                 padding-left: 14px;
+                padding-right: 0;
               }
 
               button.sidebar-button {
@@ -239,7 +281,7 @@ $topbar: 'dark';
       background-color: transparent;
     }
 
-    .nautilus-grid-view.view {
+    .nautilus-grid-view {
       &, gridview.view {
         background-color: $base;
         border-radius: $window-radius - $space-size;
@@ -247,7 +289,7 @@ $topbar: 'dark';
       }
     }
 
-    .nautilus-list-view.view {
+    .nautilus-list-view {
       border-radius: $window-radius - $space-size;
       margin: 0 $space-size $space-size 0;
 
@@ -296,6 +338,7 @@ $topbar: 'dark';
     border-radius: $circular-radius;
     background-color: rgba($background, 0.95);
     box-shadow: none;
+    color: $text;
 
     button {
       margin: (32px - $small-size) / 2;
@@ -382,15 +425,43 @@ window.dialog {
 }
 
 // leaflet
-leaflet {
+window > contents leaflet {
   background-color: transparent;
 
   stack.background {
     background-color: transparent;
   }
 
+  &.unfolded {
+    stack.background leaflet box.vertical:last-child > headerbar,
+    stack.background leaflet + headerbar {
+      border-top-left-radius: 0;
+    }
+
+    > separator + box.vertical > headerbar {
+      border-top-right-radius: 0;
+      border-top-left-radius: $window-radius;
+    }
+  }
+
   > box > scrolledwindow > viewport > widget > stack {
     background-color: $base;
+  }
+}
+
+//
+// Contacts
+//
+
+.contacts-contact-list list.navigation-sidebar {
+  background: none;
+}
+
+window > contents leaflet {
+  &.unfolded {
+    > box.vertical > headerbar {
+      border-top-left-radius: 0;
+    }
   }
 }
 
@@ -567,20 +638,6 @@ popover.event-popover > contents {
   }
 }
 
-// Edit dialog's header button
-.sources-button {
-  margin-top: 0;
-  margin-bottom: 0;
-  border-radius: 0;
-  border-top-style: none;
-  border-bottom-style: none;
-
-  &:hover:not(:backdrop) {
-    background-image: none;
-    text-shadow: none;
-  }
-}
-
 // defeats the ugly hover effect of the calendar color dot on buttons
 .calendar-color-image {
   -gtk-icon-filter: none;
@@ -600,6 +657,14 @@ button:checked:not(:backdrop) .calendar-color-image,
 
 // month/year controls
 datechooser {
+  padding: $space-size;
+
+  .current-week { // Month selector
+    background-color: $fill;
+    color: $text;
+    border-radius: $corner-radius;
+  }
+
   navigator { // add some space between the two controls
     margin-right: $space-size;
     margin-left: $space-size;
@@ -620,6 +685,17 @@ datechooser {
   .weeknum, .weekday {
     color: $text-disabled;
     font-size: smaller;
+  }
+
+  .sidebar-pane & {
+    .current-week { // Month selector
+      background-color: $titlebar-fill;
+      color: $titlebar-text;
+    }
+
+    .weeknum, .weekday {
+      color: $titlebar-text-disabled;
+    }
   }
 
   // days
@@ -659,12 +735,6 @@ datechooser {
         color: gtkalpha(currentColor, 0.1);
 
         dot { background-color: gtkalpha(currentColor, 0.1); }
-      }
-
-      &:hover:not(:backdrop) {
-        color: $text-disabled;
-
-        dot { background-color: $text-disabled; }
       }
     }
   }
@@ -822,19 +892,19 @@ searchbutton > popover > arrow {
   border: none;
 }
 
-// Month selector
-datechooser {
-  padding: $space-size;
-
-  .current-week {
-    background-color: $fill;
-    color: $text;
-    border-radius: $corner-radius;
-  }
-}
-
 menubutton {
   &.sources-button {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+    border-top-style: none;
+    border-bottom-style: none;
+
+    &:hover:not(:backdrop) {
+      background-image: none;
+      text-shadow: none;
+    }
+
     > button {
       border-radius: 0;
 
@@ -858,16 +928,29 @@ menubutton {
   stack > box {
     border-spacing: $space-size;
   }
+
+  .topbar headerbar &.sources-button {
+    > button {
+      border-radius: 0 0 $corner-radius $corner-radius;
+    }
+  }
 }
 
-//
-// Contacts
-//
+navigation-split-view .content-pane {
+  navigation-view-page > toolbarview.view {
+    box-shadow: inset 0 1px highlight($base);
+    border-top-right-radius: $window-radius;
+  }
 
-.contacts-contact-list list.navigation-sidebar {
-  background: none;
+  window.maximized & navigation-view-page > toolbarview.view {
+    box-shadow: none;
+    border-top-right-radius: 0;
+  }
 }
 
+agenda-view > scrolledwindow > viewport > list.background {
+  background-color: transparent;
+}
 
 //
 // Gnome Software
@@ -966,7 +1049,6 @@ screenshot-carousel box.frame.view {
   border-width: 1px 0;
   border-radius: 0;
 }
-
 
 /* Styling for specific category buttons. */
 .category-tile.category-create {

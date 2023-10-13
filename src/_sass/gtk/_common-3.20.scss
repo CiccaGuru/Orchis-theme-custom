@@ -3220,6 +3220,8 @@ row {
     &.text-button:not(:disabled) { color: $primary; }
   }
 
+  > box > label { padding-left: $space-size * 1.5; }
+
   &.frame,
   border { border-style: none; }
 }
@@ -3875,6 +3877,8 @@ decoration {
   .tiled-bottom &,
   .tiled-left & { border-radius: 0; }
 
+  .maximized &,
+  .fullscreen &,
   .popup & { box-shadow: none; }
 
   // server-side decorations as used by mutter
