@@ -1,6 +1,6 @@
 /* Top Bar */
 // a.k.a. the panel
-
+$corner_style: "circular";
 $panel_transition_duration: 250ms; // same as the overview transition duration
 $panel_height: if($panel_style == 'compact', $medium-size - 2px, $medium-size + 2px);
 $panel_button_hpadding: ($panel_height - $base-icon-size) / 2;

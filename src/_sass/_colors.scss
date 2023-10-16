@@ -3,6 +3,8 @@
 
 @import 'tweaks-temp';
 
+$topbar: "dark";
+
 @function gtkalpha($c, $a) {
   @return unquote("alpha(#{$c}, #{$a})");
 }

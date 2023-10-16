@@ -2,7 +2,7 @@
 $toggle-height: $space-size * 4 + $margin-size + $base-icon-size;
 
 .quick-settings {
-  padding: $space-size * 3 !important;
+  padding: $space-size * 5 !important;
   border-radius: 8px + $space-size * 5 !important;
   margin-top: $space-size / 2 !important;
   border: none;
@@ -23,9 +23,9 @@ $toggle-height: $space-size * 4 + $margin-size + $base-icon-size;
 
 .quick-toggle, .quick-menu-toggle {
   border-radius: $circular-radius;
-  min-width: if($compact == 'false', 12em, 11em);
-  max-width: if($compact == 'false', 12em, 11em);
-  min-height: $toggle-height;
+  min-width: 14em;
+  max-width: 14em;
+  min-height: $toggle-height*1.5;
   border: none;
 }
 
@@ -74,6 +74,9 @@ $toggle-height: $space-size * 4 + $margin-size + $base-icon-size;
   .quick-toggle-icon { icon-size: $base-icon-size; }
 }
 
+
+$submenu_style: 'false';
+
 .quick-menu-toggle {
   .quick-toggle {
     min-width: auto;
@@ -104,12 +107,12 @@ $toggle-height: $space-size * 4 + $margin-size + $base-icon-size;
     &:checked {
       background-color: $primary !important;
       color: on($primary);
-  
+
       &:hover {
         background-color: mix($text, $primary, 10%) !important;
         color: on($primary);
       }
-  
+
       &:active {
         background-color: mix($text, $primary, 20%) !important;
         color: on($primary);

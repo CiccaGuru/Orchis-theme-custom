@@ -1,13 +1,13 @@
 /* OSD */
 
-$osd_levelbar_height: 4px;
+$osd_levelbar_height: 10px;
 
 .osd-window {
   @extend %osd_panel;
   text-align: center;
   font-weight: bold;
-  spacing: $space-size * 2;
-  padding: $space-size * 2 $space-size * 3;
+  spacing: $space-size * 4;
+  padding: $space-size * 3 $space-size * 5;
   margin-bottom: 8em;
   border-radius: $circular-radius;
 

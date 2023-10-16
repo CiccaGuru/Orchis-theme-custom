@@ -2,6 +2,7 @@
 // Dash to Dock
 //
 
+
 // Scrollview style
 .bottom #dashtodockDashScrollview,
 .top #dashtodockDashScrollview {
@@ -258,7 +259,7 @@
 // Dash to Panel
 //
 
-$dash_to_panel_item_radius: 5px;
+$dash_to_panel_item_radius: 50%;
 
 .dashtopanelMainPanel {
   border-radius: 0 !important;
@@ -279,7 +280,7 @@ $dash_to_panel_item_radius: 5px;
 
   .panel-button {
     &, &.clock-display .clock {
-      border-radius: $dash_to_panel_item_radius + $space-size / 2 !important;
+      border-radius: 50% !important; //$dash_to_panel_item_radius + $space-size / 2 !important;
       margin: 0 !important;
     }
   }

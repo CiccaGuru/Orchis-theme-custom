@@ -63,7 +63,7 @@ $bubble_button_radius: if($corner_style == 'circular', $circular-radius, $materi
   color: on($popover);
   background-color: $popover;
   border: none;
-  box-shadow: $shell-shadow-z4;
+  box-shadow: none;
   padding: $space-size * 2;
 }
 
