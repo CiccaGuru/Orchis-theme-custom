@@ -110,13 +110,26 @@ $panel_button_hpadding: ($panel_height - $base-icon-size) / 2;
 
     // status area icons
     .system-status-icon {
-      icon-size: $base-icon-size;
-      padding: $space-size;
+      icon-size: 16px;
+      padding: $space-size * 3;
+      margin: 0 3px;
+    }
+
+    .system-tray-icons {
+      padding: $space-size * 2;
+    }
+
+    .panel-status-menu-box .system-status-icon {
       margin: 0;
     }
 
+    .panel-status-indicators-box .system-status-icon {
+      margin: 4px !important;
+      padding: 0 !important;
+    }
+
     .appindicator-trayicons-box {
-      margin: 0 $space-size;
+      margin: 60px;
     }
 
     // .appindicator-box {

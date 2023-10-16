@@ -4,6 +4,9 @@
 $topbar: 'dark';
 
 
+$topbar: 'dark';
+
+
 .nautilus-window {
   &.background.csd {
     color: if($topbar =='dark' and $variant =='light', $titlebar-text-secondary, $text-secondary);
@@ -27,20 +30,26 @@ $topbar: 'dark';
       background-color: transparent;
       box-shadow: none;
 
+      &, &:backdrop {
+
       &,
       &:backdrop {
         background-color: transparent;
         box-shadow: none;
       }
 
+
       .subtitle,
       .dim-label {
         color: $titlebar-text-secondary;
+
+        &:backdrop { color: $titlebar-text-disabled; }
 
         &:backdrop {
           color: $titlebar-text-disabled;
         }
       }
+
 
       button:not(.suggested-action):not(.destructive-action) {
         @extend %titlebar-button;
@@ -153,14 +162,25 @@ $topbar: 'dark';
               margin-left: -$space-size*2;
               border-radius: 50%;
               color: white !important;
+              padding: $space-size;
+              margin-top: $space-size*2;
+              margin-bottom: $space-size*2;
+              margin-right: $space-size*2;
+              margin-left: -$space-size*2;
+              border-radius: 50%;
+              color: white !important;
             }
 
             label.sidebar-label {
+              color: rgba(white, 0.9);
               color: rgba(white, 0.9);
               min-height: 54px;
               padding-left: $space-size;
             }
 
+            &.sidebar-placeholder-row {
+              background-color: transparent;
+            }
             &.sidebar-placeholder-row {
               background-color: transparent;
             }
@@ -208,7 +228,15 @@ $topbar: 'dark';
                 opacity: 1;
                 background-color: $primary;
               }
+              image.sidebar-icon {
+                color: $white;
+                opacity: 1;
+                background-color: $primary;
+              }
 
+              label.sidebar-label {
+                color: $primary;
+              }
               label.sidebar-label {
                 color: $primary;
               }
@@ -236,6 +264,7 @@ $topbar: 'dark';
 
               button.sidebar-button {
                 color: $primary;
+                opacity: 1;
                 opacity: 1;
 
                 @extend %button-flat-simple;
@@ -964,6 +993,7 @@ menubutton {
     border-radius: 0;
     border-top-style: none;
     border-bottom-style: none;
+
 
     &:hover:not(:backdrop) {
       background-image: none;

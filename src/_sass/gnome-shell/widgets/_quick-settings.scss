@@ -1,6 +1,6 @@
 .quick-settings {
-  padding: $space-size * 3 !important;
-  border-radius: 8px + $space-size * 5 !important;
+  padding: $space-size * 8 $space-size*4 !important;
+  border-radius: 20px + $space-size * 3 !important;
   margin-top: $space-size / 2 !important;
   border: none;
 
@@ -16,8 +16,8 @@
 
 .quick-toggle {
   border-radius: $circular-radius;
-  min-width: if($compact == 'false', 12em, 11em);
-  max-width: if($compact == 'false', 12em, 11em);
+  min-width: if($compact == 'false', 14em, 11em);
+  max-width: if($compact == 'false', 14em, 11em);
   min-height: $space-size * 4 + $base-icon-size;
   border: none;
   background-color: rgba($text, 0.06) !important;

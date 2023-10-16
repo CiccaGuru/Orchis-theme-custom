@@ -1,6 +1,7 @@
 /* OSD */
 
 $osd_levelbar_height: 10px;
+$osd_levelbar_height: 10px;
 
 .osd-window {
   @extend %osd_panel;
@@ -17,7 +18,7 @@ $osd_levelbar_height: 10px;
     icon-size: 32px;
   }
 
-  .osd-monitor-label { font-size: 3em; }
+  .osd-monitor-label { font-size: 3em;  }
 
   StLabel {
     &:ltr { margin-right: $space-size; }
@@ -36,7 +37,7 @@ $osd_levelbar_height: 10px;
     -barlevel-overdrive-color: $destructive;
     -barlevel-overdrive-separator-width: 3px;
     -barlevel-border-width: 0;
-
+    min-width: 160px;
     &:ltr { margin-right: $space-size; }
     &:rtl { margin-left: $space-size; }
   }
