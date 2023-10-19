@@ -4,9 +4,6 @@
 $topbar: 'dark';
 
 
-$topbar: 'dark';
-
-
 .nautilus-window {
   &.background.csd {
     color: if($topbar =='dark' and $variant =='light', $titlebar-text-secondary, $text-secondary);
@@ -30,66 +27,23 @@ $topbar: 'dark';
       background-color: transparent;
       box-shadow: none;
 
-
-      &, &:backdrop {
-
       &,
       &:backdrop {
         background-color: transparent;
         box-shadow: none;
       }
 
-
-
       .subtitle,
       .dim-label {
         color: $titlebar-text-secondary;
-
-        &:backdrop { color: $titlebar-text-disabled; }
 
         &:backdrop {
           color: $titlebar-text-disabled;
         }
       }
 
-      @if $mac_style == 'true' {
-        button:not(.suggested-action):not(.destructive-action):not(.close):not(.maximize):not(.minimize) {
-          @extend %titlebar-button;
-        }
-      } @else {
-        button:not(.suggested-action):not(.destructive-action) {
-          @extend %titlebar-button;
-        }
-      }
-
-      popover.background { // reset
-        button {
-          border-radius: $menuitem-radius;
-        }
-
-        button:not(.suggested-action):not(.destructive-action):not(.close):not(.maximize):not(.minimize) {
-          @extend %button-basic;
-
-          &.flat {
-            @extend %button-flat;
-          }
-        }
-
-        .linked:not(.vertical) > button:not(.suggested-action):not(.destructive-action):not(.close):not(.maximize):not(.minimize) {
-          border-radius: 0;
-
-          &:first-child { border-radius: $menuitem-radius 0 0 $menuitem-radius; }
-          &:last-child { border-radius: 0 $menuitem-radius $menuitem-radius 0; }
-          &:only-child { border-radius: $menuitem-radius; }
-        }
-
-        > contents > grid stack > scrolledwindow {
-          border: 1px solid $border;
-
-          row + separator {
-            background-color: transparent;
-          }
-        }
+      button:not(.suggested-action):not(.destructive-action) {
+        @extend %titlebar-button;
       }
     }
   }
@@ -199,25 +153,14 @@ $topbar: 'dark';
               margin-left: -$space-size*2;
               border-radius: 50%;
               color: white !important;
-              padding: $space-size;
-              margin-top: $space-size*2;
-              margin-bottom: $space-size*2;
-              margin-right: $space-size*2;
-              margin-left: -$space-size*2;
-              border-radius: 50%;
-              color: white !important;
             }
 
             label.sidebar-label {
-              color: rgba(white, 0.9);
               color: rgba(white, 0.9);
               min-height: 54px;
               padding-left: $space-size;
             }
 
-            &.sidebar-placeholder-row {
-              background-color: transparent;
-            }
             &.sidebar-placeholder-row {
               background-color: transparent;
             }
@@ -265,15 +208,7 @@ $topbar: 'dark';
                 opacity: 1;
                 background-color: $primary;
               }
-              image.sidebar-icon {
-                color: $white;
-                opacity: 1;
-                background-color: $primary;
-              }
 
-              label.sidebar-label {
-                color: $primary;
-              }
               label.sidebar-label {
                 color: $primary;
               }
@@ -301,7 +236,6 @@ $topbar: 'dark';
 
               button.sidebar-button {
                 color: $primary;
-                opacity: 1;
                 opacity: 1;
 
                 @extend %button-flat-simple;
@@ -401,7 +335,6 @@ $topbar: 'dark';
     }
 
     .nautilus-list-view {
-      background-color: $base;
       border-radius: $window-radius - $space-size;
       margin: 0 $space-size $space-size 0;
 
@@ -482,7 +415,6 @@ $topbar: 'dark';
   border-radius: $circular-radius;
   color: $titlebar-text-secondary;
   padding: 0 ($medium-size - $menuitem-size) / 2 0 ($space-size + 2px);
-  @extend %titlebar-entry;
 
   &:focus-within {
     color: $titlebar-text;
@@ -1033,7 +965,6 @@ menubutton {
     border-top-style: none;
     border-bottom-style: none;
 
-
     &:hover:not(:backdrop) {
       background-image: none;
       text-shadow: none;
@@ -1091,27 +1022,27 @@ agenda-view > scrolledwindow > viewport > list.background {
 //
 
 flowboxchild {
-  &.card:not(.category-tile) {
+  &.card {
     border: none;
     box-shadow: none;
     padding: 0;
     background: none;
   }
-}
 
-.card {
-  &.category-tile {
-    padding: $space-size * 3.5;
-    border: none;
-    border-radius: $corner-radius;
-    box-shadow: 0 2px 6px rgba(black, 0.1);
-  }
+  > button.card {
+    &.category-tile {
+      padding: $space-size * 3.5;
+      border: none;
+      border-radius: $corner-radius;
+      box-shadow: 0 2px 6px rgba(black, 0.1);
+    }
 
-  &.category-tile-iconless {
-    padding: $space-size * 1.5 $space-size * 2.5;
-    box-shadow: none;
-    background-color: $button;
-    @extend %button-flat-simple;
+    &.category-tile-iconless {
+      padding: $space-size * 1.5 $space-size * 2.5;
+      box-shadow: none;
+      background-color: $button;
+      @extend %button-flat-simple;
+    }
   }
 }
 
