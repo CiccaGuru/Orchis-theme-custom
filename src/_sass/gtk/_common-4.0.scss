@@ -134,10 +134,11 @@ label {
   &:disabled {
     opacity: 1;
     filter: none;
-    color: $text-disabled;
+    // color: $text-disabled;
 
     // selection { color: $text-disabled; }
 
+    row &,
     headerbar &,
     tab &,
     button & { color: inherit; }
@@ -281,7 +282,7 @@ spinner {
 
   @include entry(normal);
   &:focus-within { @include entry(checked); }
-  &:drop(active) { @include entry(hover); }
+  &:not(:disabled):not(:focus-within):hover, &:drop(active) { @include entry(hover); }
   &:disabled { @include entry(disabled); }
 
   > text {
@@ -347,16 +348,35 @@ entry {
     &.#{$e_type} {
       @include entry(normal, $e_color);
 
-      image { color: $e_color; }
-
       selection {
         color: on($e_color);
         background-color: $e_color;
       }
 
+      &:not(:disabled):not(:focus-within):hover, &:drop(active) { @include entry(hover, $e_color); }
+
       &:focus-within { @include entry(checked, $e_color); }
 
       &:disabled { @include entry(disabled, $e_color); }
+
+      > text {
+        > placeholder {
+          color: rgba($e_color, 0.35);
+        }
+    
+        > block-cursor {
+          color: $e_color;
+          background-color: on($e_color);
+        }
+      }
+
+      > image {
+        color: rgba($e_color, 0.8);
+
+        &:hover, &:active { color: $e_color; }
+
+        &:disabled { color: rgba($e_color, 0.35); }
+      }
     }
   }
 
@@ -584,13 +604,21 @@ button {
       color: on($b_color);
       box-shadow: none;
 
-      &:disabled { @include button(disabled); }
+      &:disabled {
+        color: rgba(on($b_color), 0.45);
+        background-color: rgba($b_color, 0.25);
+      }
 
       &:hover {
-        box-shadow: inset 0 0 0 9999px transparent,
-                    0 2px (4px * .6) -1px rgba($b_color, 0.2),
+        color: on($b_color);
+        background-color: mix(on($b_color), $b_color, percentage(0.1));
+        box-shadow: 0 2px (4px * .6) -1px rgba($b_color, 0.2),
                     0 4px (5px * .6) 0 rgba($b_color, 0.14),
                     0 1px (10px * .6) 0 rgba($b_color, 0.12);
+      }
+
+      &:active {
+        color: on($b_color);
       }
 
       &:checked { background-color: mix(on($b_color), $b_color, percentage(0.3)); }
@@ -608,7 +636,10 @@ button {
         background-color: transparent;
         color: $b_color;
 
-        &:disabled { @include button(flat-disabled); }
+        &:disabled {
+          color: rgba(on($b_color), 0.45);
+          background-color: transparent;
+        }
 
         &:checked { background-color: rgba($b_color, 0.3); }
       }
@@ -792,6 +823,7 @@ spinbutton {
       &:focus:not(:hover):not(:active):not(:disabled) {
         box-shadow: inset 0 0 0 9999px transparent;
         color: $text-secondary;
+        outline: none;
       }
     }
   }
@@ -978,7 +1010,7 @@ button.combo:only-child {
  ************/
 .toolbar,
 toolbar {
-  padding: $space-size / 2 $space-size;
+  padding: $space-size / 2;
   background-color: $background;
   border-spacing: $space-size;
 
@@ -1033,11 +1065,17 @@ toolbar {
   }
 }
 
-// oldstyle toolbar buttons
-.toolbar button {
-  margin: 1px;
-  @extend %button-flat;
-  border-radius: $corner-radius / 2;
+.toolbar {
+  button {
+    @extend %button-flat;
+    border-radius: $corner-radius / 2;
+  }
+
+  .bottom-bar & {
+    padding: $space-size;
+
+    button { border-radius: $corner-radius; }
+  }
 }
 
 // searchbar
@@ -1062,7 +1100,6 @@ searchbar > revealer > box {
  ***************/
 
 %titlebar-button-reset {
-  @extend %button-flat;
   color: $text-secondary;
 
   &:focus, &:hover, &:active, &:checked { color: $text; }
@@ -1092,7 +1129,6 @@ searchbar > revealer > box {
 }
 
 %titlebar-button {
-  @extend %button-flat;
   color: $titlebar-text-secondary;
 
   .linked:not(.vertical) > & {
@@ -1128,16 +1164,15 @@ searchbar > revealer > box {
 %titlebar-entry {
   caret-color: $titlebar-text;
 
-  &, &:focus-within {
-    background-color: $titlebar-fill;
+  &, &:drop(active), &:focus-within {
+    color: $titlebar-text;
+  }
 
-    &, & > text {
-      color: $titlebar-text;
-    }
+  &:not(:disabled):not(:focus-within):hover {
+    color: $titlebar-text;
   }
 
   &:disabled {
-    background-color: $titlebar-fill;
     color: $titlebar-text-disabled;
   }
 
@@ -1259,11 +1294,14 @@ headerbar {
     }
   }
 
-  entry { @extend %titlebar-entry; }
+  entry {
+    @extend %titlebar-entry;
+  }
 
   .linked:not(.vertical) > entry:not(:only-child) { border-radius: $corner-radius; }
 
   button:not(.suggested-action):not(.destructive-action) {
+    @extend %button-flat;
     @extend %titlebar-button;
   }
 
@@ -1284,28 +1322,32 @@ headerbar {
   }
 
   popover.background { // reset
-    > contents {
+    @if $variant == 'light' and $topbar == 'dark' {
       color: $text;
 
-      .dim-label { color: $text-secondary; }
+      > contents {
+        color: $text;
+
+        .dim-label { color: $text-secondary; }
+      }
+
+      button:not(.suggested-action):not(.destructive-action) {
+        @extend %button-basic;
+
+        &.flat {
+          @extend %button-flat;
+        }
+
+        image { color: $text; }
+      }
+
+      entry { @extend %entry-basic; }
     }
 
     button, entry, spinbutton {
       border-radius: $menuitem-radius;
       margin: 0;
     }
-
-    button:not(.suggested-action):not(.destructive-action) {
-      @extend %button-basic;
-
-      &.flat {
-        @extend %button-flat;
-      }
-
-      image { color: $text; }
-    }
-
-    entry { @extend %entry-basic; }
 
     .linked:not(.vertical) > button:not(.suggested-action):not(.destructive-action) {
       border-radius: 0;
@@ -1488,23 +1530,9 @@ headerbar {
 }
 
 window.devel {
-  headerbar.titlebar {
-    $c: $titlebar;
-    $gradient: cross-fade(10% -gtk-icontheme("system-run-symbolic"), image(transparent)) 90% 0/256px 256px no-repeat,
-               linear-gradient(to right, transparent 65%, transparentize($primary, 0.8)),
-               linear-gradient(to top, darken($c, 3%), $c 3px, lighten($c, 6%));
-    @if $variant == 'dark' {
-      $gradient: cross-fade(10% -gtk-icontheme("system-run-symbolic"), image(transparent)) 90% 0/256px 256px no-repeat,
-                 linear-gradient(to right, transparent 65%, transparentize($primary, 0.9)),
-                 linear-gradient(to top, lighten($c, 3%) 3px, lighten($c, 5%));
-    }
-
-    background: $titlebar $gradient;
-
-    &:backdrop {
-      background: $titlebar cross-fade(10% -gtk-icontheme("system-run-symbolic"), image(transparent)) 90% 0/256px 256px no-repeat,
-                  image($titlebar); /* background-color would flash */
-    }
+  headerbar > windowhandle {
+    background-image: cross-fade(5% -gtk-recolor(url("assets/scalable/devel-symbolic.svg")), image(transparent));
+    background-repeat: repeat-x;
   }
 }
 
@@ -1913,6 +1941,7 @@ popover.menu {
 popover.background {
   font: initial;
   padding: 0;
+  color: $text;
 
   &, &:backdrop {
     background-color: transparent;
@@ -1965,6 +1994,8 @@ popover.background {
 
       separator { margin: 0; }
     }
+
+    button, entry, spinbutton { border-radius: $menuitem-radius; }
   }
 
   // FIXME: Use the popover color instead of transparent as a workaround for .view
@@ -1988,6 +2019,11 @@ popover.background {
     text-shadow: none;
     border-spacing: $space-size;
     @extend %button-flat-simple;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
 
     accelerator {
       color: $text-disabled;
@@ -2505,31 +2541,6 @@ switch {
 /*************************
  * Check and Radio items *
  *************************/
-// draw regular check and radio items using our PNG assets
-// all assets are rendered from assets.svg. never add pngs directly
-
-// selection-mode
-.view.content-view.check:not(list),
-.content-view .tile check:not(list) {
-  min-height: 40px;
-  min-width: 40px;
-  margin: 0;
-  padding: 0;
-  box-shadow: none;
-  background-color: transparent;
-  background-image: none;
-  -gtk-icon-shadow: $icon-shadow-z2;
-
-  &:hover, &:active { -gtk-icon-shadow: $icon-shadow-z4; }
-
-  @each $s, $as in ('', '-unchecked'),
-                   (':checked', '-checked') {
-    &#{$s} {
-      -gtk-icon-source: -gtk-scaled(url("assets/selectionmode-checkbox#{$as}#{$asset-suffix}.png"),
-                                    url("assets/selectionmode-checkbox#{$as}#{$asset-suffix}@2.png"));
-    }
-  }
-}
 
 checkbutton,
 radiobutton {
@@ -2540,7 +2551,7 @@ radiobutton {
 checkbutton.text-button,
 radiobutton.text-button {
   // this is for a nice focus on check and radios text
-  padding: 2px;
+  padding: $space-size / 2;
 
   label:not(:only-child) { margin: 0 4px; }
 
@@ -2715,6 +2726,30 @@ columnview.view {
 treeview.view radio:checked {
   -gtk-icon-source: -gtk-recolor(url("assets/scalable/radio-checked-symbolic.svg"));
   border-image: none;
+}
+
+// selection-mode
+checkbutton.selection-mode {
+  border-radius: $circular-radius;
+
+  check, radio {
+    padding: $space-size;
+    border-radius: $circular-radius;
+    -gtk-icon-size: 36px;
+
+    -gtk-icon-source: -gtk-scaled(-gtk-recolor(url("assets/scalable/selection-unchecked-symbolic.svg")),
+                                  -gtk-recolor(url("assets/scalable/selection-unchecked-symbolic@2.svg")));
+
+    &:checked {
+      -gtk-icon-source: -gtk-scaled(-gtk-recolor(url("assets/scalable/selection-checked-symbolic.svg")),
+                                    -gtk-recolor(url("assets/scalable/selection-checked-symbolic@2.svg")));
+    }
+  }
+
+  label {
+    &:dir(ltr) { margin-right: $space-size; }
+    &:dir(rtl) { margin-left: $space-size; }
+  }
 }
 
 
@@ -3229,8 +3264,10 @@ list.frame { border-radius: $corner-radius; }
 
 row {
   background-clip: padding-box;
+  color: $text-secondary;
 
   @at-root %row_activatable, &.activatable {
+    color: $text-secondary;
     transition: $transition,
                 background-size $ripple-fade-out-duration $ease-out,
                 background-image $ripple-fade-out-opacity-duration $ease-out;
@@ -3243,6 +3280,7 @@ row {
 
     &:focus {
       box-shadow: inset 0 0 0 9999px $overlay-focus;
+      color: $text;
     }
 
     &:hover {
@@ -3251,6 +3289,7 @@ row {
                   background-size $ripple-fade-out-duration $ease-out,
                   background-image $ripple-fade-out-opacity-duration $ease-out;
       box-shadow: inset 0 0 0 9999px $overlay-hover;
+      color: $text;
     }
 
     &.has-open-popup, // this is for indicathing which row generated a popover see https://bugzilla.gnome.org/show_bug.cgi?id=754411
@@ -3262,6 +3301,7 @@ row {
       box-shadow: inset 0 0 0 9999px $overlay-hover;
       background-image: radial-gradient(circle farthest-corner at center, $overlay-active 30%, transparent 0%);
       background-size: 100% 100%;
+      color: $text;
     }
   }
 
@@ -3284,18 +3324,14 @@ row {
   }
 
   &:selected {
-    @extend %selected_items;
+    background-color: $overlay-selected;
     color: inherit; // for overlays
-
-    image,
-    label { color: $text; }
 
     button image,
     button label { color: inherit; }
 
     &:disabled {
-      image,
-      label { color: $text-disabled; }
+      color: $text-disabled;
     }
   }
 }
@@ -3873,6 +3909,11 @@ stacksidebar {
   + separator.vertical,
   separator.horizontal { @extend %hide_separators; }
 
+  .sidebar-pane &.sidebar,
+  leaflet.unfolded > box > &.sidebar {
+    border: none;
+  }
+
   list {
     padding: $space-size;
     background-color: $base-alt; // This should not be necessary, but the parent stacksidebar ignores background-color.
@@ -3949,8 +3990,6 @@ separator.sidebar {
     &:selected {
       background-color: $overlay-checked;
       color: $primary;
-
-      label, image { color: $primary; }
 
       &:hover {
         background-color: $overlay-focus-hover;
@@ -4369,8 +4408,7 @@ window {
     margin: 0;
     transition: none;
     border-radius: $window-radius;
-    box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
-                inset 0 1px highlight($titlebar);
+    box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
 
     &:backdrop {
       // the transparent shadow here is to enforce that the shadow extents don't
@@ -4378,8 +4416,7 @@ window {
       // The biggest shadow should be in the same order then in the active state
       // or the jumping will happen during the transition.
       transition: $transition-shadow;
-      box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent,
-                  inset 0 1px highlight($titlebar);
+      box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
     }
 
     &.messagedialog {

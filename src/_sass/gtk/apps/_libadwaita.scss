@@ -584,26 +584,6 @@ viewswitchertitle {
     margin-top: 0;
     margin-bottom: 0;
   }
-
-  .top-bar headerbar & viewswitcher {
-    &.narrow {
-      button.toggle {
-        border-radius: 0 0 $corner-radius $corner-radius;
-
-        &:checked {
-          background-color: $primary;
-          color: on($primary);
-    
-          &:backdrop { color: on($primary, disabled); }
-    
-          indicatorbin.needs-attention > indicator {
-            > label { color: $primary; }
-            background-color: on($primary);
-          }
-        }
-      }
-    }
-  }
 }
 
 // AdwIndicatorBin
@@ -655,6 +635,7 @@ tabbar {
 
   tabbox {
     padding: 0;
+    min-height: $menuitem-size;
 
     > tabboxchild {
       border-radius: 0;
@@ -766,8 +747,16 @@ overlay-split-view {
   @include transition-shadows($frame);
 }
 
-navigation-view .medium {
-  padding-top: $space-size * 2;
+toolbarview.undershoot-top scrolledwindow {
+  @include undershoot(top);
+}
+
+toolbarview.undershoot-bottom scrolledwindow {
+  @include undershoot(bottom);
+}
+
+navigation-view navigation-view-page .medium stack > button { // Nautilus properties
+  margin-top: $space-size * 2;
 }
 
 // Sidebar
@@ -785,15 +774,6 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
   &:backdrop {
     background-color: $sidebar-backdrop;
     transition: background-color $duration $ease-out;
-  }
-
-  .sidebar,
-  .toolbar,
-  .navigation-sidebar,
-  searchbar > revealer > box {
-    background-color: transparent;
-    box-shadow: none;
-    border: none;
   }
 
   toolbarview.undershoot-top scrolledwindow {
@@ -861,6 +841,15 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 }
 
 .sidebar-pane {
+  .sidebar,
+  .toolbar,
+  .navigation-sidebar,
+  searchbar > revealer > box {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
   headerbar {
     border-top-right-radius: 0;
 
@@ -868,6 +857,11 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
       background-color: transparent;
       box-shadow: inset 0 1px highlight($titlebar);
     }
+  }
+
+  window.maximized & headerbar,
+  window.tiled & headerbar {
+    box-shadow: none;
   }
 
   @if $variant == 'light' and $topbar == 'dark' {
@@ -882,8 +876,41 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
     }
   
     .dim-label { color: $titlebar-text-disabled; }
-  
+
+    .navigation-sidebar {
+      color: $titlebar-text-secondary;
+    
+      > row {
+        color: $titlebar-text-secondary;
+    
+        &:hover, &:active,
+        &:focus-visible:focus-within {
+          color: $titlebar-text;
+        }
+
+        &:selected {
+          color: $primary;
+        }
+    
+        &:disabled { color: $titlebar-text-secondary-disabled; }
+      }
+    }
+
+    check, radio {
+      color: $titlebar-text-secondary;
+
+      &:hover, &:active { color: $titlebar-text; }
+
+      &:disabled { color: $titlebar-text-secondary-disabled; }
+
+      &:checked, &:indeterminate { color: $check_radio_primary; }
+
+      &:checked:disabled, &:indeterminate:disabled { color: $titlebar-text-secondary-disabled; }
+    }
+
     popover {
+      color: $titlebar-text;
+
       > arrow,
       > contents {
         background-color: $titlebar-backdrop;
@@ -895,9 +922,13 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 
         entry { @extend %titlebar-entry; }
 
-        modelbutton,
+        modelbutton, button.image-button.model,
         button:not(.suggested-action):not(.destructive-action) {
           @extend %titlebar-button;
+
+          &:hover {
+            outline: none;
+          }
         }
 
         modelbutton {
@@ -910,12 +941,20 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
               color: $titlebar-divider;
             }
           }
+
+          check, radio {
+            &:not(:checked):not(:indeterminate):not(:disabled) { color: $titlebar-text-secondary; }
+          }
         }
 
         checkbutton,
         radiobutton,
         label {
           color: $titlebar-text;
+        }
+
+        label:disabled {
+          color: $titlebar-text-disabled;
         }
       }
     }
@@ -990,15 +1029,142 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
       }
     }
   }
+
+  window.maximized & headerbar,
+  window.tiled & headerbar {
+    box-shadow: none;
+  }
 }
 
 // Gnome >= 45.0
 .top-bar {
+  background: none;
+  box-shadow: none;
+
   .collapse-spacing {
     padding: 0;
   }
 
   windowhandle {
     filter: none;
+  }
+}
+
+// ThemeSelector
+themeselector, // Gnome text editor
+panelthemeselector { // Gnome builder
+  margin: $space-size * 1.5;
+
+  checkbutton {
+    padding: 0;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 1px;
+    background-clip: content-box;
+    border-radius: $circular-radius;
+    box-shadow: inset 0 0 0 1px $border;
+
+    &.follow:checked,
+    &.light:checked,
+    &.dark:checked {
+      box-shadow: inset 0 0 0 2px $primary;
+    }
+
+    &.follow {
+      background-image: linear-gradient(to bottom right, #ffffff 50%, #202020 50%);
+    }
+
+    &.light {
+      background-color: #ffffff;
+    }
+
+    &.dark {
+      background-color: #202020;
+    }
+
+    &.theme-selector radio {
+      -gtk-icon-source: none;
+      border: none;
+      background: none;
+      box-shadow: none;
+      min-height: 20px;
+      min-width: 20px;
+      padding: 0;
+      margin: 0;
+
+      &:hover, &:active, &:checked {
+        background-color: transparent;
+      }
+
+      &:checked {
+        -gtk-icon-size: 20px;
+        -gtk-icon-source: -gtk-scaled(-gtk-recolor(url("assets/scalable/select-symbolic.svg")), -gtk-recolor(url("assets/scalable/select-symbolic@2.svg")));
+        color: on($primary);
+        background-color: $primary;
+
+        &, &:hover, &:active {
+          box-shadow: 0 2px 3px -1px rgba(black, 0.08), 0 1px 2px 0 rgba(black, 0.1);
+        }
+      }
+    }
+  }
+}
+
+themeswitcher { // Gnome console
+  padding: $space-size;
+
+  .check {
+    min-height: 20px;
+    min-width: 20px;
+    background: none;
+    padding: 0;
+    margin: 0;
+    border-radius: $circular-radius;
+    color: on($primary);
+    background-color: $primary;
+
+    &, &:hover, &:active {
+      box-shadow: 0 2px 3px -1px rgba(black, 0.08), 0 1px 2px 0 rgba(black, 0.1);
+    }
+  }
+
+  checkbutton {
+    padding: 0;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 1px;
+    background-clip: content-box;
+    border-radius: $circular-radius;
+    box-shadow: inset 0 0 0 1px $border;
+
+    &:checked {
+      box-shadow: inset 0 0 0 2px $primary;
+    }
+
+    radio {
+      &, &:hover, &:active, &:checked, &:checked:hover, &:checked:active {
+        background-color: transparent;
+        border: none;
+        background: none;
+        box-shadow: none;
+        color: transparent;
+        -gtk-icon-source: none;
+        -gtk-icon-size: 0;
+      }
+    }
+
+    &.system {
+      background: linear-gradient(-45deg, #1e1e1e 50%, white 50%);
+    }
+
+    &.light {
+      color: gtkalpha(black, .8);
+      background-color: white;
+    }
+
+    &.dark {
+      color: white;
+      background-color: #1e1e1e;
+    }
   }
 }

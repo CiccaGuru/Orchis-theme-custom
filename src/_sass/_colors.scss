@@ -136,8 +136,8 @@ $panel-solid:                           if($topbar == 'dark', background(e), bac
 $panel:                                 if($opacity == 'default', rgba($panel-solid, 0.65), $panel-solid);
 $shell:                                 if($topbar == 'dark', rgba(black, 0.65), background(c)); // for gnome-shell
 
-$button:                                if($blackness == 'true' and $variant == 'dark', on($background, secondary-fill), on($background, fill));
-$entry:                                 if($blackness == 'true' and $variant == 'dark', on($background, secondary-fill), on($background, fill));
+$button:                                gtkalpha(currentColor, 0.05);
+$entry:                                 gtkalpha(currentColor, 0.05);
 
 //
 // Misc colors
@@ -155,7 +155,7 @@ $destructive:                           $error;
 
 $check_radio_primary:                   if($check_radio == 'default', $success, $primary);
 
-$frame:                                 if($variant == 'light', rgba(black, 0.12), rgba(black, 0.20)); // instead of shadows
+$frame:                                 if($variant == 'light', rgba(black, 0.1), rgba(black, 0.25)); // instead of shadows
 $border:                                if($variant == 'light', rgba(black, 0.12), rgba(white, 0.12));
 $solid-border:                          if($variant == 'light', darken($background, 8%), lighten($background, 12%));
 $border-alt:                            rgba(black, 0.16); // darker border color for Chrome and Firefox
