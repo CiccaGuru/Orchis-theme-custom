@@ -2113,6 +2113,7 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
 }
 
 #panel Gjs_status_keyboard_InputSourceIndicator.panel-button,
+#panel Gjs_appindicatorsupport_rgcjonas_gmail_com_indicatorStatusIcon_IndicatorStatusIcon.panel-button,
 #panel Gjs_appindicatorsupport_rgcjonas_gmail_com_indicatorStatusIcon_AppIndicatorsIndicatorStatusIcon.panel-button {
   -natural-hpadding: 17px !important;
   -minimum-hpadding: 17px !important;
@@ -2171,6 +2172,8 @@ StScrollBar StButton#vhandle:active, StScrollBar StButton#hhandle:active {
   background-color: rgba(52, 52, 52, 0.9);
   border-radius: 9999px;
   padding: 6px 12px;
+  box-shadow: none;
+  border: none;
 }
 
 .window-close {
