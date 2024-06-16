@@ -163,6 +163,17 @@ $submenu_style: 'false';
     color: rgba(black, 0.65) !important;
   }
 
+  &:insensitive {
+    // override insensitive style on submenu
+    @if $submenu_style == 'true' {
+      background-color: $surface !important;
+      color: $text-secondary !important;
+    } @else {
+      background-color: white !important;
+      color: rgba(black, 0.65) !important;
+    }
+  }
+
   .popup-menu-item {
     padding: $space-size + 2px !important;
     border-radius: $circular-radius !important;
@@ -205,7 +216,10 @@ $submenu_style: 'false';
       }
     }
 
-    > StIcon { -st-icon-style: symbolic; }
+    > StIcon {
+      -st-icon-style: symbolic;
+      icon-size: $scalable_icon_size;
+    }
 
     & > :first-child {
       &:ltr {
@@ -301,6 +315,12 @@ $submenu_style: 'false';
 }
 
 .device-subtitle { color: $text-disabled; }
+
+.keyboard-brightness-level {
+  spacing: $space-size;
+
+  .button:checked { @extend %default_button; }
+}
 
 // background apps
 

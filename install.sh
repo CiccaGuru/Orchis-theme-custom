@@ -18,13 +18,14 @@ OPTIONS:
   -l, --libadwaita        Link installed Orchis gtk-4.0 theme to config folder for all libadwaita app use Orchis theme
 
   --tweaks                Specify versions for tweaks [solid|compact|black|primary|macos|submenu|(nord/dracula)] (Options can mix)
-                          1. solid:              No transparency panel variant
-                          2. compact:            No floating panel variant
-                          3. black:              Full black variant
-                          4. primary:            Change radio icon checked color to primary theme color (Default is Green)
-                          5. macos:              Change window buttons to MacOS style
-                          6. submenu:            Set normal submenus color contrast (dark submenu style on dark version)
-                          7. [nord|dracula]:     Nord/dracula colorscheme themes (nord and dracula can not mix use!)
+                          1. solid              No transparency panel variant
+                          2. compact            No floating panel variant
+                          3. black              Full black variant
+                          4. primary            Change radio icon checked color to primary theme color (Default is Green)
+                          5. macos              Change window buttons to MacOS style
+                          6. submenu            Set normal submenus color contrast (dark submenu style on dark version)
+                          7. [nord|dracula]     Nord/dracula colorscheme themes (nord and dracula can not mix use!)
+                          8. dock                Fix style for 'dash-to-dock' or 'ubuntu-dock' extension
 
   --round                 Change theme round corner border-radius [Input the px value you want] (Suggested: 2px < value < 16px)
                           1. 3px
@@ -33,11 +34,12 @@ OPTIONS:
                           ...
                           13. 15px
 
-  --shell                 install gnome-shell version [38|40|42|44]
-                          1. 38:                 Gnome-shell version < 40.0
-                          2. 40:                 Gnome-shell version = 40.0
-                          3. 42:                 Gnome-shell version = 42.0
-                          4. 44:                 Gnome-shell version >= 44.0
+  --shell                 install gnome-shell version [38|40|42|44|46] (Without this option script will detect shell version and install the right theme)
+                          1. 38                 Gnome-shell version <= 38.0
+                          2. 40                 Gnome-shell version = 40.0
+                          3. 42                 Gnome-shell version = 42.0
+                          4. 44                 Gnome-shell version = 44.0
+                          4. 46                 Gnome-shell version = 46.0
 
   -r, --remove,
   -u, --uninstall         Uninstall/Remove installed themes
@@ -99,6 +101,10 @@ while [[ "$#" -gt 0 ]]; do
             shell="44"
             shift
             ;;
+          46)
+            shell="46"
+            shift
+            ;;
           -*)
             break
             ;;
@@ -154,6 +160,11 @@ while [[ "$#" -gt 0 ]]; do
             dracula="true"
             ctype="-Dracula"
             echo -e "Install dracula colorscheme ..."
+            shift
+            ;;
+          dock)
+            dockfix="true"
+            echo -e "\nFix 'dash-to-dock' or 'ubuntu-dock' style ..."
             shift
             ;;
           -*)
@@ -316,8 +327,6 @@ if [[ "${#lcolors[@]}" -eq 0 ]] ; then
   lcolors=("${COLOR_VARIANTS[1]}")
 fi
 
-clean_theme
-
 if [[ ${remove} == 'true' ]]; then
   if [[ "$libadwaita" == 'true' ]]; then
     uninstall_link
@@ -326,6 +335,8 @@ if [[ ${remove} == 'true' ]]; then
   else
     uninstall_theme
   fi
+elif [[ "$dockfix" == 'true' ]]; then
+  fix_dash_to_dock
 else
   if [[ "$libadwaita" == 'true' && "$UID" == "$ROOT_UID" ]]; then
     echo -e "Do not run -l with sudo, that will link libadwaita theme to root folder !"

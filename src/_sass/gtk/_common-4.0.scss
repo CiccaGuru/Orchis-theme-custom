@@ -612,23 +612,15 @@ button {
       &:hover {
         color: on($b_color);
         background-color: mix(on($b_color), $b_color, percentage(0.1));
-        box-shadow: 0 2px (4px * .6) -1px rgba($b_color, 0.2),
-                    0 4px (5px * .6) 0 rgba($b_color, 0.14),
-                    0 1px (10px * .6) 0 rgba($b_color, 0.12);
+        box-shadow: none;
       }
 
       &:active {
         color: on($b_color);
+        background-color: mix(on($b_color), $b_color, percentage(0.2));
       }
 
-      &:checked { background-color: mix(on($b_color), $b_color, percentage(0.3)); }
-
-      &:checked:hover {
-        box-shadow: inset 0 0 0 9999px transparent,
-                    0 3px 3px -3px rgba($b_color, 0.3),
-                    0 2px 3px -1px rgba($b_color, 0.24),
-                    0 2px 5px 0 rgba($b_color, 0.12);
-      }
+      &:checked { background-color: mix(on($b_color), $b_color, percentage(0.15)); }
 
       &:focus { box-shadow: 0 0 0 2px rgba($b_color, 0.35); }
 
@@ -1010,11 +1002,11 @@ button.combo:only-child {
  ************/
 .toolbar,
 toolbar {
-  padding: $space-size / 2;
+  padding: $space-size;
   background-color: $background;
   border-spacing: $space-size;
 
-  button { @extend %button-flat; }
+  > button { @extend %button-flat; }
 
   // on OSD
   .osd & { background-color: transparent; }
@@ -1044,30 +1036,12 @@ toolbar {
   &.vertical > separator { margin: 2px; }
 
   &:not(.inline-toolbar):not(.osd) {
-    scale,
-    entry,
-    spinbutton,
-    button { margin: 2px; }
-
-    .linked entry,
-    .linked spinbutton,
-    .linked button {
-      &:not(:first-child) { margin-left: 0; }
-      &:not(:last-child) { margin-right: 0; }
-    }
-
-    spinbutton {
-      entry,
-      button { margin: 0; }
-    }
-
     switch { margin: 2px + $space-size 2px; }
   }
 }
 
 .toolbar {
-  button {
-    @extend %button-flat;
+  > button {
     border-radius: $corner-radius / 2;
   }
 
@@ -1252,6 +1226,8 @@ headerbar {
     &:disabled { color: $titlebar-text-secondary-disabled; }
   }
 
+  .info &,
+  .about &,
   &.flat {
     color: $text;
 
@@ -1349,12 +1325,6 @@ headerbar {
   }
 
   button.toggle { border-radius: $circular-radius; }
-
-  background.csd.info &.flat,
-  background.csd.about &.flat { // reset
-    background-color: transparent;
-    box-shadow: none;
-  }
 
   popover.background { // reset
     @if $variant == 'light' and $topbar == 'dark' {
@@ -3178,18 +3148,26 @@ frame {
   statusbar & > border { border: none; } // for backward compatibility
 }
 
-actionbar > revealer > box {
-  padding: $space-size;
-  border-spacing: $space-size;
-  border-top: 1px solid $divider;
-  background-color: $base;
-  background-clip: border-box;
+actionbar {
   box-shadow: none;
 
-  entry,
-  button,
-  menubutton,
-  splitbutton { margin: 0; }
+  > revealer > box {
+    padding: $space-size;
+    border-spacing: $space-size;
+    border-top: 1px solid $divider;
+    background-color: $base;
+    background-clip: border-box;
+    box-shadow: none;
+
+    &, > box.start, > box.end {
+      border-spacing: $space-size;
+    }
+
+    entry,
+    button,
+    menubutton,
+    splitbutton { margin: 0; }
+  }
 }
 
 statusbar {
@@ -3908,7 +3886,12 @@ window.aboutdialog {
   }
 }
 
-window.about.background.csd {
+window.about {
+  .top-bar {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
   headerbar {
     color: $text-secondary;
     
@@ -4462,7 +4445,12 @@ window {
     margin: 0;
     transition: none;
     border-radius: $window-radius;
-    box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+
+    @if $variant == 'light' and $topbar == 'dark' {
+      box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent, inset 0 1px $titlebar;
+    } @else {
+      box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+    }
 
     &:backdrop {
       // the transparent shadow here is to enforce that the shadow extents don't
@@ -4470,16 +4458,23 @@ window {
       // The biggest shadow should be in the same order then in the active state
       // or the jumping will happen during the transition.
       transition: $transition-shadow;
-      box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+
+      @if $variant == 'light' and $topbar == 'dark' {
+        box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent, inset 0 1px $titlebar-backdrop;
+      } @else {
+        box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+      }
     }
 
-    &.messagedialog {
-      background-color: $surface;
-      background-image: none;
+    // &.messagedialog { }
 
-      &:backdrop {
-        background-color: $background;
-        background-image: none;
+    @if $variant == 'light' and $topbar == 'dark' {
+      &.about, &.messagedialog, &.message {
+        box-shadow: $shadow-z16, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+  
+        &:backdrop {
+          box-shadow: $shadow-z4, 0 16px 16px 2px transparent, 0 6px 18px 5px transparent;
+        }
       }
     }
 

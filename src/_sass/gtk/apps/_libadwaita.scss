@@ -480,6 +480,25 @@ preferencesgroup > box {
 }
 
 //
+// AdwBanner
+//
+
+banner > revealer > widget {
+  /* There are 2 more instances in _sidebars.css, keep in sync with that */
+  background-color: gtkmix($primary, $base, 30%);
+  color: $text;
+  padding: $space-size;
+
+  &:backdrop {
+    background-color: gtkmix($primary, $base, 15%);
+
+    > label, > button {
+      filter: opacity(.5);
+    }
+  }
+}
+
+//
 // viewswitcher
 //
 
@@ -841,7 +860,7 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 }
 
 .sidebar-pane {
-  .topbar,
+  .top-bar,
   .sidebar,
   .toolbar,
   .navigation-sidebar,
@@ -976,6 +995,10 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 }
 
 .content-pane {
+  &, &:backdrop {
+    background-color: $background;
+  }
+
   headerbar {
     color: $text;
     border-top-left-radius: 0;
@@ -1016,8 +1039,20 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 // Gnome >= 45.0
 .top-bar {
   box-shadow: none;
+  background-color: $titlebar;
 
-  &, &:backdrop {
+  &:backdrop {
+    background-color: $titlebar-backdrop;
+  }
+
+  .info &,
+  .about & {
+    &, &:backdrop {
+      background-color: transparent;
+    }
+  }
+
+  tabview &, tabview &:backdrop {
     background-color: $base;
   }
 
@@ -1042,6 +1077,22 @@ $sidebar-backdrop: if($variant == 'light' and $topbar == 'dark', $titlebar-backd
 .content-pane {
   .top-bar, .top-bar:backdrop {
     background-color: transparent;
+  }
+}
+
+//
+// Floating Sheet
+//
+
+floating-sheet {
+  > dimming {
+    background-color: rgba(black, 0.25);
+  }
+
+  > sheet.background {
+    box-shadow: $shadow-z16;
+    border-radius: $window-radius;
+    outline: none;
   }
 }
 

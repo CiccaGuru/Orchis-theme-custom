@@ -7,6 +7,9 @@ source "${REPO_DIR}/gtkrc.sh"
 ROOT_UID=0
 DEST_DIR=
 
+MY_USERNAME="${SUDO_USER:-$(logname 2> /dev/null || echo "${USER}")}"
+MY_HOME=$(getent passwd "${MY_USERNAME}" | cut -d: -f6)
+
 # Destination directory
 if [[ "$UID" -eq "$ROOT_UID" ]]; then
   DEST_DIR="/usr/share/themes"
@@ -79,12 +82,7 @@ install() {
 
   mkdir -p                                                                      "$THEME_DIR/gnome-shell"
   cp -r "$SRC_DIR/gnome-shell/pad-osd.css"                                      "$THEME_DIR/gnome-shell"
-
-  if [[ "$tweaks" == 'true' ]]; then
-    sassc $SASSC_OPT "$SRC_DIR/gnome-shell/shell-$GS_VERSION/gnome-shell${ELSE_DARK:-}$size.scss" "$THEME_DIR/gnome-shell/gnome-shell.css"
-  else
-    cp -r "$SRC_DIR/gnome-shell/shell-$GS_VERSION/gnome-shell${ELSE_DARK:-}$size.css" "$THEME_DIR/gnome-shell/gnome-shell.css"
-  fi
+  sassc $SASSC_OPT "$SRC_DIR/gnome-shell/shell-$GS_VERSION/gnome-shell${ELSE_DARK:-}$size.scss" "$THEME_DIR/gnome-shell/gnome-shell.css"
 
   cp -r "$SRC_DIR/gnome-shell/common-assets"                                    "$THEME_DIR/gnome-shell/assets"
   cp -r "$SRC_DIR/gnome-shell/assets${ELSE_DARK:-}/"*.svg                       "$THEME_DIR/gnome-shell/assets"
@@ -115,26 +113,14 @@ install() {
   cp -r "$SRC_DIR/gtk/assets$theme$ctype"                                       "$THEME_DIR/gtk-3.0/assets"
   cp -r "$SRC_DIR/gtk/scalable"                                                 "$THEME_DIR/gtk-3.0/assets"
   cp -r "$SRC_DIR/gtk/thumbnails/thumbnail$theme${ELSE_DARK:-}$ctype.png"       "$THEME_DIR/gtk-3.0/thumbnail.png"
-
-  if [[ "$tweaks" == 'true' ]]; then
-    sassc $SASSC_OPT "$SRC_DIR/gtk/3.0/gtk$color$size.scss"                     "$THEME_DIR/gtk-3.0/gtk.css"
-    sassc $SASSC_OPT "$SRC_DIR/gtk/3.0/gtk-Dark$size.scss"                      "$THEME_DIR/gtk-3.0/gtk-dark.css"
-  else
-    cp -r "$SRC_DIR/gtk/3.0/gtk$color$size.css"                                 "$THEME_DIR/gtk-3.0/gtk.css"
-    cp -r "$SRC_DIR/gtk/3.0/gtk-Dark$size.css"                                  "$THEME_DIR/gtk-3.0/gtk-dark.css"
-  fi
+  sassc $SASSC_OPT "$SRC_DIR/gtk/3.0/gtk$color$size.scss"                       "$THEME_DIR/gtk-3.0/gtk.css"
+  sassc $SASSC_OPT "$SRC_DIR/gtk/3.0/gtk-Dark$size.scss"                        "$THEME_DIR/gtk-3.0/gtk-dark.css"
 
   mkdir -p                                                                      "$THEME_DIR/gtk-4.0"
   cp -r "$SRC_DIR/gtk/assets$theme$ctype"                                       "$THEME_DIR/gtk-4.0/assets"
   cp -r "$SRC_DIR/gtk/scalable"                                                 "$THEME_DIR/gtk-4.0/assets"
-
-  if [[ "$tweaks" == 'true' ]]; then
-    sassc $SASSC_OPT "$SRC_DIR/gtk/4.0/gtk$color$size.scss"                     "$THEME_DIR/gtk-4.0/gtk.css"
-    sassc $SASSC_OPT "$SRC_DIR/gtk/4.0/gtk-Dark$size.scss"                      "$THEME_DIR/gtk-4.0/gtk-dark.css"
-  else
-    cp -r "$SRC_DIR/gtk/4.0/gtk$color$size.css"                                 "$THEME_DIR/gtk-4.0/gtk.css"
-    cp -r "$SRC_DIR/gtk/4.0/gtk-Dark$size.css"                                  "$THEME_DIR/gtk-4.0/gtk-dark.css"
-  fi
+  sassc $SASSC_OPT "$SRC_DIR/gtk/4.0/gtk$color$size.scss"                       "$THEME_DIR/gtk-4.0/gtk.css"
+  sassc $SASSC_OPT "$SRC_DIR/gtk/4.0/gtk-Dark$size.scss"                        "$THEME_DIR/gtk-4.0/gtk-dark.css"
 
   mkdir -p                                                                      "$THEME_DIR/xfwm4"
 
@@ -158,11 +144,7 @@ install() {
     cp -r "$SRC_DIR/cinnamon/theme$theme$ctype/radiobutton${ELSE_DARK:-}.svg"   "$THEME_DIR/cinnamon/assets/radiobutton.svg"
   fi
 
-  if [[ "$tweaks" == 'true' ]]; then
-    sassc $SASSC_OPT "$SRC_DIR/cinnamon/cinnamon${ELSE_DARK:-}$size.scss"       "$THEME_DIR/cinnamon/cinnamon.css"
-  else
-    cp -r "$SRC_DIR/cinnamon/cinnamon${ELSE_DARK:-}$size.css"                   "$THEME_DIR/cinnamon/cinnamon.css"
-  fi
+  sassc $SASSC_OPT "$SRC_DIR/cinnamon/cinnamon${ELSE_DARK:-}$size.scss"         "$THEME_DIR/cinnamon/cinnamon.css"
 
   cp -r "$SRC_DIR/cinnamon/thumbnails/thumbnail$theme${ELSE_DARK:-}$ctype.png"  "$THEME_DIR/cinnamon/thumbnail.png"
 
@@ -188,23 +170,6 @@ uninstall() {
   local THEME_DIR="${1}/${2}${3}${4}${5}${6}"
 
   [[ -d "$THEME_DIR" ]] && rm -rf "$THEME_DIR" && echo -e "Uninstalling "$THEME_DIR" ..."
-}
-
-clean() {
-  local dest="$1"
-  local name="$2"
-  local theme="$3"
-  local color="$4"
-  local size="$5"
-
-  local THEME_DIR="$dest/$name$theme$color$size"
-
-  if [[ "${theme}" == '' && "${color}" == '' && "${size}" == '' ]]; then
-    todo='nothing'
-  elif [[ -d "${THEME_DIR}" ]]; then
-    rm -rf "${THEME_DIR}"
-    echo -e "Find: ${THEME_DIR} ! removing it ..."
-  fi
 }
 
 uninstall_link() {
@@ -237,10 +202,14 @@ install_package() {
     echo sassc needs to be installed to generate the css.
     if has_command zypper; then
       sudo zypper in sassc
+    elif has_command apt; then
+      sudo apt install sassc
     elif has_command apt-get; then
       sudo apt-get install sassc
     elif has_command dnf; then
       sudo dnf install sassc
+    elif has_command yum; then
+      sudo yum install sassc
     elif has_command pacman; then
       sudo pacman -S --noconfirm sassc
     fi
@@ -324,10 +293,6 @@ install_theme_color() {
 theme_tweaks() {
   install_package; tweaks_temp
 
-  if [[ "$panel" == "compact" || "$opacity" == 'solid' || "$blackness" == "true" || "$accent" == "true" || "$primary" == "true" || "$round" == "true" || "$macstyle" == "true" || "$submenu" == "true" || "$nord" == 'true' || "$dracula" == 'true' ]]; then
-    tweaks='true'
-  fi
-
   if [[ "$panel" == "compact" ]] ; then
     install_compact_panel
   fi
@@ -395,9 +360,52 @@ check_shell() {
     else
       GS_VERSION="3-28"
     fi
-    else
-      echo "'gnome-shell' not found, using styles for last gnome-shell version available."
-      GS_VERSION="46-0"
+  else
+    echo "'gnome-shell' not found, using styles for last gnome-shell version available."
+    GS_VERSION="46-0"
+  fi
+}
+
+backup_file() {
+  if [[ -f "${1}.bak" || -d "${1}.bak" ]]; then
+    case "${2}" in
+      sudo)
+        sudo rm -rf "${1}" ;;
+      *)
+        rm -rf "${1}" ;;
+    esac
+  fi
+
+  if [[ -f "${1}" || -d "${1}" ]]; then
+    case "${2}" in
+      sudo)
+        sudo mv -n "${1}"{"",".bak"} ;;
+      *)
+        mv -n "${1}"{"",".bak"} ;;
+    esac
+  fi
+}
+
+fix_dash_to_dock() {
+  local DASH_TO_DOCK_DIR_ROOT="/usr/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
+  local DASH_TO_DOCK_DIR_HOME="${MY_HOME}/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com"
+  local UBUNTU_DOCK_DIR_ROOT="/usr/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com"
+  local UBUNTU_DOCK_DIR_HOME="${MY_HOME}/.local/share/gnome-shell/extensions/ubuntu-dock@ubuntu.com"
+
+  if [[ -d "${DASH_TO_DOCK_DIR_HOME}" ]]; then
+    backup_file "${DASH_TO_DOCK_DIR_HOME}/stylesheet.css"
+  elif [[ -d "${DASH_TO_DOCK_DIR_ROOT}" ]]; then
+    backup_file "${DASH_TO_DOCK_DIR_ROOT}/stylesheet.css" "sudo"
+  fi
+
+  if [[ -d "${UBUNTU_DOCK_DIR_HOME}" ]]; then
+    backup_file "${UBUNTU_DOCK_DIR_HOME}/stylesheet.css"
+  elif [[ -d "${UBUNTU_DOCK_DIR_ROOT}" ]]; then
+    backup_file "${UBUNTU_DOCK_DIR_ROOT}/stylesheet.css" "sudo"
+  fi
+
+  if has_command dbus-launch; then
+    dbus-launch dconf write /org/gnome/shell/extensions/dash-to-dock/apply-custom-theme true
   fi
 }
 
@@ -412,7 +420,7 @@ install_theme() {
     done
   done
 
-  if (which xfce4-popup-whiskermenu 2> /dev/null); then
+  if (which xfce4-popup-whiskermenu 2> /dev/null) && $(sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc" &> /dev/null); then
     sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc"
   fi
 
