@@ -105,22 +105,22 @@
 *:disabled { -gtk-icon-effect: dim; }
 
 .gtkstyle-fallback {
-  background-color: $background;
-  color: $text;
+  background-color: $titlebar;
+  color: $titlebar-text;
 
   &:hover {
-    background-color: darken($background, 5%);
-    color: $text;
+    background-color: darken($titlebar, 5%);
+    color: $titlebar-text;
   }
 
   &:active {
-    background-color: darken($background, 10%);
-    color: $text;
+    background-color: darken($titlebar, 10%);
+    color: $titlebar-text;
   }
 
   &:disabled {
-    background-color: $background;
-    color: $text-disabled;
+    background-color: $titlebar-backdrop;
+    color: $titlebar-text-disabled;
   }
 
   &:selected {
@@ -1582,10 +1582,9 @@ headerbar {
     &, &:disabled { background-color: transparent; }
   }
 
-  label:not(:only-child) {
-    &:first-child { margin-left: 0; }
-
-    &:last-child { margin-right: 0; }
+  label, image {
+    margin-left: 2px;
+    margin-right: 2px;
   }
 
   &.text-button {
@@ -1907,10 +1906,17 @@ popover.background {
     background-color: transparent;
   }
 
-  // FIXME: Use the popover color instead of transparent as a workaround for .view
-  list,
-  .view:not(:selected),
-  toolbar { background-color: $surface; }
+  > list > row {
+    &:first-child {
+      border-top-left-radius: $menu-radius;
+      border-top-right-radius: $menu-radius;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: $menu-radius;
+      border-bottom-right-radius: $menu-radius;
+    }
+  }
 
   button, entry, spinbutton {
     border-radius: $menuitem-radius;
