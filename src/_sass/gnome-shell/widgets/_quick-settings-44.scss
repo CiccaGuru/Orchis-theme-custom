@@ -141,12 +141,12 @@ $submenu_style: 'false';
     &:checked {
       background-color: $primary !important;
       color: on($primary);
-  
+
       &:hover {
         background-color: mix(on($primary), $primary, 10%) !important;
         color: on($primary);
       }
-  
+
       &:active {
         background-color: mix(on($primary), $primary, 20%) !important;
         color: on($primary);
