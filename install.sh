@@ -16,7 +16,7 @@ OPTIONS:
   -s, --size VARIANT      Specify size variant [standard|compact] (Default: All variants)
 
   -i, --icon VARIANT      Specify icon variant(s) for shell panel activities button
-                          [default|apple|simple|gnome|ubuntu|arch|manjaro|fedora|debian|void|opensuse|popos|mxlinux|zorin|endeavouros|tux|nixos|gentoo|budgie|solus]
+                          [default|apple|simple|gnome|ubuntu|arch|manjaro|fedora|debian|void|opensuse|popos|mxlinux|zorin|endeavouros|tux|nixos|gentoo|budgie|solus|kali]
                           (Default: ChromeOS style)
 
   -l, --libadwaita        Link installed Orchis gtk-4.0 theme to config folder for all libadwaita app use Orchis theme
@@ -27,7 +27,7 @@ OPTIONS:
                           2. compact            No floating panel variant
                           3. black              Full black variant
                           4. primary            Change radio icon checked color to primary theme color (Default is Green)
-                          5. macos              Change window buttons to MacOS style
+                          5. macos              Change window buttons to macOS style
                           6. submenu            Set normal submenus color contrast (dark submenu style on dark version)
                           7. [nord|dracula]     Nord/dracula colorscheme themes (nord and dracula can not mix use!)
                           8. dock               Fix style for 'dash-to-dock' or 'ubuntu-dock' extension
@@ -161,7 +161,7 @@ while [[ "$#" -gt 0 ]]; do
             ;;
           macos)
             macstyle="true"
-            echo -e "Install MacOS style window button version ..."
+            echo -e "Install macOS style window button version ..."
             shift
             ;;
           submenu)
@@ -389,6 +389,10 @@ while [[ "$#" -gt 0 ]]; do
             ;;
           solus)
             icon='-solus'
+            shift
+            ;;
+          kali)
+            icon='-kali'
             shift
             ;;
           -*)

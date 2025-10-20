@@ -1086,7 +1086,7 @@ searchbar > revealer > box {
   @extend %button-flat;
   color: $titlebar-text-secondary;
 
-  .linked:not(.vertical) > & {
+  .linked:not(.vertical):not(.path-bar) > & {
     border-radius: $circular-radius;
   }
 
@@ -1180,6 +1180,10 @@ searchbar > revealer > box {
     background-color: $titlebar-divider;
   }
 
+  button:not(.suggested-action):not(.destructive-action) {
+    @extend %titlebar-button;
+  }
+
   entry { @extend %titlebar-entry; }
 
   .linked:not(.vertical) > entry {
@@ -1214,10 +1218,19 @@ searchbar > revealer > box {
   }
 
   // FIXME: Ugly overriding
-  .path-bar button:not(.suggested-action):not(.destructive-action).text-button {
-    min-width: 0;
-    padding-left: ($medium-size - 24px) / 2;
-    padding-right: ($medium-size - 24px) / 2;
+  .path-bar button:not(.suggested-action):not(.destructive-action) {
+    color: $titlebar-text-secondary;
+    border-radius: 3px;
+
+    &.text-button {
+      min-width: 0;
+      padding-left: ($medium-size - 24px) / 2;
+      padding-right: ($medium-size - 24px) / 2;
+    }
+  
+    &:focus, &:hover, &:active, &:checked { color: $titlebar-text; }
+  
+    &:disabled { color: $titlebar-text-secondary-disabled; }
   }
 
   &.selection-mode {
@@ -1357,10 +1370,6 @@ headerbar {
     margin-bottom: $space-size;
   }
 
-  button:not(.suggested-action):not(.destructive-action) {
-    @extend %titlebar-button;
-  }
-
   separator.titlebutton {
     margin-top: $large-size / 4;
     margin-bottom: $large-size / 4;
@@ -1419,6 +1428,34 @@ headerbar {
           padding: 0;
           border-radius: 0;
         }
+      }
+    }
+  }
+}
+
+window.background.csd {
+  > widget > headerbar:not(.titlebar) {
+    min-height: $medium-size;
+    border: none;
+    box-shadow: none;
+
+    @if $mac_style == 'true' {
+      padding: 0 $space-size * 2;
+    } @else {
+      padding: 0 $space-size / 2;
+    }
+
+    button.titlebutton {
+      padding: 0;
+
+      @if $mac_style == 'true' {
+        min-height: 16px;
+        min-width: 16px;
+        margin: 0 $space-size - 2px;
+      } @else {
+        min-height: $small-size;
+        min-width: $small-size;
+        margin: 0 $space-size / 2;
       }
     }
   }
@@ -1533,7 +1570,7 @@ headerbar {
     }
   }
 
-  button.titlebutton {
+  button.titlebutton:not(.suggested-action):not(.destructive-action) {
     @extend %circular-button;
 
     @if $mac_style == 'true' {
@@ -1724,6 +1761,13 @@ menubar,
   &:backdrop {
     background-color: $titlebar-backdrop;
     color: $titlebar-text-secondary;
+  }
+
+  headerbar & {
+    &, &:backdrop {
+      background-color: transparent;
+      box-shadow: none;
+    }
   }
 
   > menuitem {

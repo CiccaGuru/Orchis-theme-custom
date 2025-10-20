@@ -225,7 +225,7 @@ link_libadwaita() {
 
   echo -e "\nLink '$THEME_DIR/gtk-4.0' to '${HOME}/.config/gtk-4.0' for libadwaita..."
 
-  mkdir -p                                                                      "${HOME}/.config/gtk-4.0"
+  [[ ! -d "${HOME}/.config/gtk-4.0" ]] && mkdir -p                              "${HOME}/.config/gtk-4.0"
   rm -rf "${HOME}/.config/gtk-4.0/"{assets,gtk.css,gtk-dark.css}
   ln -sf "${THEME_DIR}/gtk-4.0/assets"                                          "${HOME}/.config/gtk-4.0/assets"
   ln -sf "${THEME_DIR}/gtk-4.0/gtk.css"                                         "${HOME}/.config/gtk-4.0/gtk.css"
@@ -557,12 +557,20 @@ install_theme() {
     done
   done
 
-  if (which xfce4-popup-whiskermenu 2> /dev/null) && $(sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc" &> /dev/null); then
-    sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc"
-  fi
+  if has_command xfce4-popup-whiskermenu; then
+    echo -e "\nFor the rounded float whiskermenu, you need set your whiskermenu background opacity to 0 !"
 
-  if (pgrep xfce4-session &> /dev/null); then
-    xfce4-panel -r
+    if has_command notify-send; then
+      notify-send "You need set your whiskermenu background opacity to 0 !" -i dialog-warning-symbolic
+    fi
+
+    if $(sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc" &> /dev/null); then
+      sed -i "s|.*menu-opacity=.*|menu-opacity=0|" "$HOME/.config/xfce4/panel/whiskermenu"*".rc"
+    fi
+
+    if (pgrep xfce4-session &> /dev/null); then
+      xfce4-panel -r
+    fi
   fi
 
   local DASH_TO_DOCK_STYLESHEET="$HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/stylesheet.css"
@@ -582,6 +590,12 @@ uninstall_theme() {
       done
     done
   done
+
+  local DASH_TO_DOCK_STYLESHEET_BAK="$HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/stylesheet.css.bak"
+
+  if [[ -f "$DASH_TO_DOCK_STYLESHEET_BAK" ]]; then
+    mv "$DASH_TO_DOCK_STYLESHEET_BAK" "${DASH_TO_DOCK_STYLESHEET_BAK%.bak}"
+  fi
 }
 
 clean_theme() {
