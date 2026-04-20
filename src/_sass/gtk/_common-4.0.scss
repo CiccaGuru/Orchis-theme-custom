@@ -112,11 +112,6 @@ gridview {
 
       @extend %selected_items;
     }
-
-    box { //cells
-      border-spacing: 2px; //label separation
-      margin: 3px;
-    }
   }
 }
 
