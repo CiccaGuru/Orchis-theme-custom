@@ -112,8 +112,8 @@ $theme_list_radius: $window-radius - $space-size;
                 border-image-slice: 10 10 10 46;
                 border-image-repeat: stretch;
                 border-image-source: -gtk-scaled(url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}.png"),
-                                                 url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}@2.png"));
-
+                                                url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}@2.png"));
+                
                 label.sidebar-label {
                   padding-left: 14px;
                 }

@@ -13,7 +13,6 @@ $topbar: 'dark';
     &:backdrop {
       background-image: none;
       background-color: if($topbar =='dark' and $variant =='light', $titlebar, $base);
-      background-color: if($topbar =='dark' and $variant =='light', $titlebar, $base);
     }
   }
 
@@ -360,12 +359,14 @@ $topbar: 'dark';
                 border-image-width: 16px 9px 16px 46px;
                 border-image-slice: 16 9 16 46;
                 border-image-repeat: stretch;
-                border-image-source: -gtk-scaled(url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}.png"),
-                  url("assets/row-selected#{$blackness-asset-suffix}#{$theme-asset-suffix}@2.png"));
+                border-image-source: -gtk-scaled(url("assets/row-selected.png"),
+                  url("assets/row-selected@2.png"));
+
               }
 
               label.sidebar-label {
                 margin-left: $space-size + 4px;
+                background: transparent;
               }
 
               button.sidebar-button {
@@ -2270,15 +2271,15 @@ window.background.chromium {
 
   headerbar.header-bar.titlebar {
     padding: 0 $space-size * 2;
-    background-color: $background;
-    color: $text;
+    background-color: $titlebar;
+    color: $titlebar-text;
     border-radius: $window-radius $window-radius 0 0;
     box-shadow: inset 0 1px 0 rgba(white, 0.1);
     border: none;
 
     &:backdrop {
-      background-color: $background;
-      color: $text-disabled;
+      background-color: $titlebar-backdrop;
+      color: $titlebar-text-disabled;
       box-shadow: inset 0 1px 0 rgba(white, 0.1);
       border: none;
     }
